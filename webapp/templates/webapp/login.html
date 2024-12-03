@@ -1,0 +1,89 @@
+{% extends "cabezal.html" %}
+{% block cargar_static %}
+    {% load static %}
+{% endblock %}
+
+{% block titulo_pagina %}
+<title>Iniciar Sesión - BibliotecaStand</title>
+{% endblock %}
+
+{% block contenido_pagina %}
+<section class="section_login d-flex justify-content-center align-items-center" style="min-height: calc(100vh - 120px);">
+    <div class="contenedor_login p-4" style="background-color: #ffe8b6; border-radius: 8px; width: 400px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        <h2 class="text-center mb-4" style="font-weight: bold;">Iniciar Sesión</h2>
+        <form id="loginForm">
+            <!-- Campo Usuario -->
+            <div class="mb-3">
+                <label for="usuario" class="form-label" style="font-weight: bold;">Usuario</label>
+                <input
+                    type="email"
+                    id="usuario"
+                    name="usuario"
+                    class="form-control"
+                    placeholder="Ingresa tu usuario"
+                    required>
+            </div>
+            <!-- Campo Contraseña -->
+            <div class="mb-3">
+                <label for="contraseña" class="form-label" style="font-weight: bold;">Contraseña</label>
+                <input
+                    type="password"
+                    id="contraseña"
+                    name="contraseña"
+                    class="form-control"
+                    placeholder="Ingresa tu contraseña"
+                    required>
+            </div>
+            <!-- Registro y Recuperación -->
+            <div class="text-start">
+                <a href="{% url 'index_register' %}" class="text-danger" style="font-size: 0.9rem;">
+                    Aún no tienes una cuenta?
+                </a>
+                <p class="text-danger" style="font-size: 0.9rem; font-weight: bold; margin-bottom: 0;">Regístrate aquí</p>
+            </div>
+            <!-- Botón de Enviar -->
+            <button type="submit" class="btn btn-dark w-100 mt-3">Enviar</button>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block jvscript_archivos_defer %}
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const usuario = document.getElementById('usuario').value;
+        const contraseña = document.getElementById('contraseña').value;
+
+        // Validar que el usuario sea un correo electrónico
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(usuario)) {
+            alert('Por favor, ingresa un correo electrónico válido.');
+            return;
+        }
+
+        try {
+            const response = await fetch('https://api.tuservidor.com/login', { // Cambia la URL por la de tu API
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ usuario, contraseña })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert('Inicio de sesión exitoso');
+                // Redirigir o realizar otra acción
+            } else {
+                alert(`Error: ${result.message}`);
+            }
+        } catch (error) {
+            console.error('Error al enviar el formulario:', error);
+            alert('Hubo un problema al iniciar sesión. Intenta nuevamente.');
+        }
+    });
+</script>
+{% endblock %}

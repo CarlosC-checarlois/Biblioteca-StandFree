@@ -1,0 +1,177 @@
+{% extends "cabezal.html" %}
+{% block cargar_static %}
+    {% load static %}
+{% endblock %}
+
+{% block titulo_pagina %}
+    <title>Carta de Cafés - Biblioteca Cafetería</title>
+{% endblock %}
+
+{% block css_archivos %}
+    <style>
+        /* Estilo del Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro */
+            display: flex; /* Flexbox para centrar */
+            justify-content: center; /* Centrar horizontalmente */
+            align-items: center; /* Centrar verticalmente */
+        }
+
+        .modal-content-wrapper {
+            max-width: 80%;
+            max-height: 80%;
+        }
+
+        .modal-content {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+{% block contenido_pagina %}
+    <!-- Sección de Introducción -->
+    <section class="hero hscero">
+        <img
+                src="{% static 'webapp/images/cartas/cartas_imagen_cafe.png' %}"
+                width="100%"
+                height="auto"
+                loading="lazy"
+                alt="Imagen del catálogo de cafés"
+                class="hero-image"
+                onclick="openModal('{% static 'webapp/images/cartas/cartas_imagen_cafe.png' %}')"
+        />
+        <p class="p_hero">
+            Explora nuestra selección de cafés y bebidas para acompañar tu lectura.
+        </p>
+    </section>
+
+    <!-- Sección de Carta -->
+    <section class="catalogo">
+        <h2>Carta de Cafés</h2>
+        <p>Disfruta de nuestra selección especial de cafés y bebidas.</p>
+
+        <!-- Barra de búsqueda -->
+        <div class="search-bar">
+            <input
+                    type="text"
+                    id="search-input"
+                    placeholder="Buscar producto..."
+                    aria-label="Buscar producto"
+            />
+            <select id="search-type" aria-label="Tipo de búsqueda">
+                <option value="nombre">Nombre</option>
+                <option value="precio">Precio</option>
+                <option value="categoria">Categoría</option>
+            </select>
+            <button onclick="filtrarProductos()">Buscar</button>
+        </div>
+        <div class="input-hint">
+            Ingrese un valor a buscar en el campo de arriba y seleccione el tipo de búsqueda.
+        </div>
+
+        <!-- Lista de Productos -->
+        <ul class="book-list" id="product-list">
+            {% if productos %}
+                {% for producto in productos %}
+                    <li
+                            class="book-item"
+                            data-nombre="{{ producto.carNombre }}"
+                            data-precio="{{ producto.carPrecio }}"
+                            data-categoria="{{ producto.carCategoria }}"
+                    >
+                        <img
+                                src="{% static 'webapp/images/cartas/latte_carta.png' %}"
+                                alt="{{ producto.carNombre }}"
+                                class="book-thumb"
+                                style="width: 10%; height: 40%; padding-right: 2%;"
+                                onclick="openModal('{% static 'webapp/images/cartas/latte_carta.png' %}')"
+                        />
+                        <div class="menu-details">
+                            <h3>{{ producto.carNombre }}</h3>
+                            <p>{{ producto.carDescripcion }}</p>
+                            <p>Precio: ${{ producto.carPrecio }}</p>
+                            <div class="actions">
+                                <!-- Botón de Ver Más -->
+                                <button class="boton">Ver más</button>
+                                <button class="boton" onclick="addToCart('{{ producto.carCodigo }}')">Comprar</button>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <p class="no-products">No hay productos disponibles en este momento.</p>
+            {% endif %}
+        </ul>
+    </section>
+
+    <!-- Modal para Imagen Ampliada -->
+    <div id="imageModal-standfree" class="modal">
+        <span id="modal-close-btn" class="close" onclick="closeModal()">&times;</span>
+        <div class="modal-content-wrapper">
+            <img class="modal-content" id="expandedImage-standfree"/>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block jvscript_archivos_defer %}
+    <script>
+        // Función para abrir el modal con la imagen seleccionada
+        function openModal(imageSrc) {
+            const modal = document.getElementById('imageModal-standfree');
+            const expandedImage = document.getElementById('expandedImage-standfree');
+            expandedImage.src = imageSrc;
+            modal.style.display = 'flex';
+        }
+
+        // Función para cerrar el modal
+        function closeModal() {
+            const modal = document.getElementById('imageModal-standfree');
+            modal.style.display = 'none';
+        }
+
+        // Función para construir la URL y redirigir
+        function addToCart(carCodigo) {
+            const url = `/carrito/agregar/${carCodigo}/carta/`;
+            window.location.href = url; // Redirigir al URL generado
+        }
+
+        // Placeholder para el botón de Ver más
+        function verMas() {
+            alert('Función Ver más aún no implementada');
+        }
+
+        // Función para construir la URL y redirigir
+        function addToCart(carCodigo) {
+            const url = `/carrito/agregar/${carCodigo}/carta/`;
+            window.location.href = url; // Redirigir al URL generado
+        }
+
+        // Placeholder para el botón de Ver más
+        function verMas() {
+            alert('Función Ver más aún no implementada');
+        }
+    </script>
+
+    <script src="{% static 'webapp/js/main.js' %}"></script>
+    <script src="{% static 'webapp/js/modal.js' %}"></script>
+{% endblock %}

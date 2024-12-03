@@ -1,0 +1,175 @@
+{% extends "cabezal.html" %}
+{% block cargar_static %}
+    {% load static %}
+{% endblock %}
+
+{% block titulo_pagina %}
+    <title>Catálogo de Libros - Biblioteca Cafetería</title>
+{% endblock %}
+{% block css_archivos %}
+    <style>
+        /* Estilo del Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro */
+            display: flex; /* Flexbox para centrar */
+            justify-content: center; /* Centrar horizontalmente */
+            align-items: center; /* Centrar verticalmente */
+        }
+
+        .modal-content-wrapper {
+            max-width: 80%;
+            max-height: 80%;
+        }
+
+        .modal-content {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+{% block contenido_pagina %}
+    <!-- Sección de Introducción -->
+    <section class="hero hscero">
+        <img
+                src="{% static 'webapp/images/libros/cartas_imagen_libros.png' %}"
+                width="100%"
+                height="auto"
+                loading="lazy"
+                alt="Imagen del catálogo de libros de la cafetería-librería"
+                class="hero-image"
+                onclick="openModal('{% static 'webapp/images/libros/cartas_imagen_libros.png' %}')"
+        >
+        <p class="p_hero">
+            Te presentamos nuestro catálogo de libros. Explora una amplia variedad mientras disfrutas de un delicioso
+            café.
+        </p>
+    </section>
+
+    <!-- Sección de Catálogo de Libros -->
+    <section class="catalogo">
+        <h2 class="h1_span">Catálogo de Libros</h2>
+        <p>
+            Disfruta de nuestra selección especial de libros, perfectas para acompañar tus pedidos.
+        </p>
+
+        <!-- Barra de búsqueda -->
+        <div class="search-bar">
+            <input
+                    type="text"
+                    id="search-input"
+                    placeholder="Buscar producto..."
+                    aria-label="Buscar producto"
+            />
+            <select id="search-type" aria-label="Tipo de búsqueda">
+                <option value="nombre">Nombre</option>
+                <option value="precio">Precio</option>
+                <option value="categoria">Categoría</option>
+            </select>
+            <button onclick="filtrarProductos()">Buscar</button>
+        </div>
+        <div class="input-hint">
+            Ingrese un valor a buscar en el campo de arriba y seleccione el tipo de búsqueda.
+        </div>
+
+        <!-- Lista de Libros -->
+        <ul class="book-list">
+            {% if libros %}
+                {% for libro in libros %}
+                    <li class="book-item" data-libro-id="{{ libro.libCodigo }}">
+                        <!-- Imagen del libro o imagen por defecto -->
+                        <img
+                                src="{% static 'webapp/images/libros/el_principito.png' %}"
+                                alt="{{ libro.libNombre }}"
+                                class="book-thumb"
+                                style="width: 10%; height: 40%; padding-right: 2%;"
+                                onclick="openModal('{% static 'webapp/images/libros/el_principito.png' %}')"
+                        >
+                        <div class="menu-details">
+                            <h3>{{ libro.libNombre }}</h3>
+                            <p>Autor: {{ libro.libAutor }}</p>
+                            <p>Fecha de Publicación: {{ libro.libFechaPublicacion }}</p>
+                            <p>Precio: ${{ libro.libPrecio }}</p>
+                            <div class="book-details">
+                                <button class="boton" onclick="verMas()">Ver más</button>
+                                <button class="boton" onclick="addToCart('{{ libro.libCodigo }}')">Comprar</button>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <p class="no-products">No hay libros disponibles en este momento.</p>
+            {% endif %}
+        </ul>
+    </section>
+
+    <!-- Modal para imagen ampliada -->
+    <div id="imageModal-standfree" class="modal">
+        <span id="modal-close-btn" class="close" onclick="closeModal()">&times;</span>
+        <div class="modal-content-wrapper">
+            <img class="modal-content" id="expandedImage-standfree">
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block jvscript_archivos_defer %}
+    <script>
+        // Función para abrir el modal con la imagen seleccionada
+        function openModal(imageSrc) {
+            const modal = document.getElementById('imageModal-standfree');
+            const expandedImage = document.getElementById('expandedImage-standfree');
+            expandedImage.src = imageSrc;
+            modal.style.display = 'flex';
+        }
+
+        // Función para cerrar el modal
+        function closeModal() {
+            const modal = document.getElementById('imageModal-standfree');
+            modal.style.display = 'none';
+        }
+
+        // Función para construir la URL y redirigir
+        function addToCart(libroId) {
+            const url = `/carrito/agregar/${libroId}/libro/`;
+            window.location.href = url; // Redirigir al URL generado
+        }
+
+        // Placeholder para el botón de Ver más
+        function verMas() {
+            alert('Función Ver más aún no implementada');
+        }
+
+        // Función para construir la URL y redirigir
+        function addToCart(libroId) {
+            const url = `/carrito/agregar/${libroId}/libro/`;
+            window.location.href = url; // Redirigir al URL generado
+        }
+
+        // Placeholder para el botón de Ver más
+        function verMas() {
+            alert('Función Ver más aún no implementada');
+        }
+    </script>
+
+    <script src="{% static 'webapp/js/main.js' %}"></script>
+    <script src="{% static 'webapp/js/modal.js' %}"></script>
+{% endblock %}

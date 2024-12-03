@@ -1,0 +1,117 @@
+{% extends "cabezal.html" %}
+{% block cargar_static %}
+    {% load static %}
+{% endblock %}
+
+{% block sobreescribir_jvscript_archivos %}
+{% endblock %}
+
+{% block titulo_pagina %}
+    <title>Carrito de Compras - BibliotecaStand</title>
+{% endblock %}
+{% block css_archivos %}
+    <style>
+        .table-container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .table {
+            background-color: #ffffff;
+        }
+    </style>
+{% endblock %}
+{% block contenido_pagina %}
+    <main class="container py-4">
+        <h1 class="text-center mb-4">Carrito de Compras</h1>
+
+        {% if carrito.values %}
+            <!-- Tabla del Carrito -->
+            <div class="table-container">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark text-center">
+                    <tr>
+                        <th>Producto</th>
+                        <th>Precio Unitario</th>
+                        <th>Cantidad</th>
+                        <th>Subtotal (con IVA)</th>
+                        <th>Acción</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for producto in carrito.values %}
+                        <tr class="carrito-item" data-id="{{ producto.id }}" data-precio="{{ producto.precio }}"
+                            data-cantidad="{{ producto.cantidad }}">
+                            <td class="align-middle">
+                                <div class="d-flex align-items-center">
+                                    <span>{{ producto.nombre }}</span>
+                                </div>
+                            </td>
+                            <td class="text-center align-middle">${{ producto.precio|floatformat:2 }}</td>
+                            <td class="text-center align-middle">{{ producto.cantidad }}</td>
+                            <td class="text-center align-middle subtotal-column">$<span class="subtotal">0.00</span>
+                            </td>
+                            <td class="text-center align-middle">
+                                <a href="{% url 'eliminar_del_carrito' producto.id producto.tipo %}"
+                                   class="btn btn-danger btn-sm">
+                                    Eliminar
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr class="table-secondary">
+                        <td colspan="3" class="text-end"><strong>Total del Carrito:</strong></td>
+                        <td class="text-center"><strong>$<span id="total-carrito">0.00</span></strong></td>
+                        <td></td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <!-- Botón Finalizar Compra -->
+            <div class="text-end mt-3">
+                <button class="btn btn-success">Finalizar Compra</button>
+            </div>
+        {% else %}
+            <p class="text-center fs-4">Tu carrito está vacío.</p>
+        {% endif %}
+    </main>
+{% endblock %}
+
+{% block jvscript_archivos_defer %}
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const carritoItems = document.querySelectorAll(".carrito-item");
+            const totalCarritoElement = document.getElementById("total-carrito");
+            let totalCarrito = 0;
+
+            carritoItems.forEach((item) => {
+                // Obtener datos del producto
+                const precio = parseFloat(item.dataset.precio);
+                const cantidad = parseInt(item.dataset.cantidad);
+
+                // Calcular el subtotal con IVA del 15%
+                const subtotal = precio * cantidad * 1.15; // Aplicar IVA (15%)
+                totalCarrito += subtotal;
+
+                // Actualizar el subtotal en el HTML
+                const subtotalElement = item.querySelector(".subtotal");
+                if (subtotalElement) {
+                    subtotalElement.textContent = subtotal.toFixed(2); // Mostrar subtotal con dos decimales
+                }
+            });
+
+            // Actualizar el total en el HTML
+            if (totalCarritoElement) {
+                totalCarritoElement.textContent = totalCarrito.toFixed(2);
+            }
+        });
+    </script>
+    <script src="{% static 'webapp/js/main.js' %}"></script>
+    <script src="{% static 'webapp/js/modal.js' %}"></script>
+
+{% endblock %}
