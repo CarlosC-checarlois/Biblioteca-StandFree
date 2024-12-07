@@ -28,17 +28,59 @@
             background-color: #bada55;
             margin: 0;
         }
+
+        .btn-wsp {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 25px;
+            right: 25px;
+            background: #fff;
+            color: #FFF;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 35px;
+            box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            transition: all 300ms ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-wsp:hover {
+            background: #d0ffd9;
+        }
+
+        .btn-wsp img {
+            width: 100%; /* Hace que la imagen ocupe todo el ancho del contenedor */
+            height: 100%; /* Hace que la imagen ocupe toda la altura del contenedor */
+            object-fit: cover; /* Ajusta la imagen para llenar completamente el contenedor sin distorsionar */
+            border-radius: 50%; /* Mantiene el borde redondeado de la imagen */
+        }
+
+        @media only screen and (min-width: 320px) and (max-width: 768px) {
+            .btn-wsp {
+                width: 63px;
+                height: 63px;
+            }
+
+            .btn-wsp img {
+                width: 100%; /* Ajusta el tamaño para que llene el nuevo tamaño del botón */
+                height: 100%; /* Ajusta el tamaño para que llene el nuevo tamaño del botón */
+            }
+        }
+
     </style>
 {% endblock %}
 {% block sobreescribir_jvscript_archivos %}
 {% endblock %}
-
 {% block contenido_pagina %}
     <!-- Sección de Bienvenida -->
     <section class="hscero">
         <!-- Video de bienvenida -->
         <video
-                src="{% static 'webapp/videos/Cafe_Video.mp4' %}"
+                src="{{ media_url }}videos/Cafe_Video.mp4"
                 autoplay
                 loop
                 muted
@@ -54,7 +96,7 @@
     <div class="hr-container"></div>
     <section class="content_h1">
         <span id="services-title" style="
-            font-size: 4vw;
+            font-size: 6vw;
             background: -webkit-linear-gradient(#b5940f, #ffd6b5);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -92,49 +134,51 @@
             </a>
         </div>
     </section>
+    <div class="hr-container"></div>
 
-<section class="vision_hero">
-    <!-- ¿Quiénes somos? -->
-    <div class="vision_quienes_somos">
-        <p class="vision_p_hero">
-            <span class="vision_h1_span">¿Quiénes somos?</span>
-            En StandFree, creemos en la magia de la conexión entre la literatura y el café. Fundada en 2024,
-            nuestra misión es ofrecer un espacio donde las personas puedan disfrutar de una buena lectura
-            acompañada de una taza de café cuidadosamente seleccionada.
-            <br><br>
-            Nuestra cafetería-librería es un lugar para relajarse, aprender y compartir. Contamos con una amplia
-            colección de libros que abarca desde clásicos literarios hasta los últimos lanzamientos, y nuestra
-            carta de cafés incluye una variedad de sabores y métodos de preparación que harán que cada visita sea
-            única.
-            <br><br>
-            Más que un local, somos una comunidad de amantes de la literatura y el café, comprometidos a crear
-            experiencias memorables y a promover el hábito de la lectura. Ya sea que busques un lugar para estudiar,
-            reunirte con amigos o simplemente relajarte, StandFree es tu rincón perfecto en la ciudad.
-        </p>
-    </div>
-
-    <!-- Contenedor de Misión y Visión -->
-    <div class="vision_contenedor_dos_columnas">
-        <!-- Visión -->
-        <div class="vision_columna">
+    <section class="vision_hero">
+        <!-- ¿Quiénes somos? -->
+        <div class="vision_quienes_somos">
             <p class="vision_p_hero">
-                <span class="vision_h1_span">Visión</span>
-                Ser reconocidos como un referente cultural y gastronómico en la ciudad, un lugar donde el amor por
-                los libros y el café crea una comunidad de personas apasionadas por el conocimiento y las buenas
-                experiencias.
+                <span class="vision_h3_span">¿Quiénes somos?</span>
+                En StandFree, creemos en la magia de la conexión entre la literatura y el café. Fundada en 2024,
+                nuestra misión es ofrecer un espacio donde las personas puedan disfrutar de una buena lectura
+                acompañada de una taza de café cuidadosamente seleccionada.
+                <br><br>
+                Nuestra cafetería-librería es un lugar para relajarse, aprender y compartir. Contamos con una amplia
+                colección de libros que abarca desde clásicos literarios hasta los últimos lanzamientos, y nuestra
+                carta de cafés incluye una variedad de sabores y métodos de preparación que harán que cada visita sea
+                única.
+                <br><br>
+                Más que un local, somos una comunidad de amantes de la literatura y el café, comprometidos a crear
+                experiencias memorables y a promover el hábito de la lectura. Ya sea que busques un lugar para estudiar,
+                reunirte con amigos o simplemente relajarte, StandFree es tu rincón perfecto en la ciudad.
             </p>
         </div>
-        <!-- Misión -->
-        <div class="vision_columna">
-            <p class="vision_p_hero">
-                <span class="vision_h1_span">Misión</span>
-                Brindar un espacio acogedor donde la literatura y el café se fusionan para ofrecer una experiencia
-                única. Promovemos la cultura y el aprendizaje en un ambiente relajado, donde cada visitante se siente
-                en casa.
-            </p>
+
+        <!-- Contenedor de Misión y Visión -->
+        <div class="vision_contenedor_dos_columnas">
+            <!-- Visión -->
+            <div class="vision_columna">
+                <p class="vision_p_hero">
+                    <span class="vision_h3_span">Visión</span>
+                    Ser reconocidos como un referente cultural y gastronómico en la ciudad, un lugar donde el amor por
+                    los libros y el café crea una comunidad de personas apasionadas por el conocimiento y las buenas
+                    experiencias.
+                </p>
+            </div>
+            <!-- Misión -->
+            <div class="vision_columna">
+                <p class="vision_p_hero">
+                    <span class="vision_h3_span">Misión</span>
+                    Brindar un espacio acogedor donde la literatura y el café se fusionan para ofrecer una experiencia
+                    única. Promovemos la cultura y el aprendizaje en un ambiente relajado, donde cada visitante se
+                    siente
+                    en casa.
+                </p>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
     <!-- Modal de Imágenes -->
     <div id="imageModal-standfree" class="modal">
@@ -169,10 +213,41 @@
                      alt="Café">
             </div>
         </div>
-    </div>
-{% endblock %}
 
+    </div>
+    <footer>
+        <p>© 2024 BibliotecaStand - Todos los derechos reservados</p>
+    </footer>
+
+{% endblock %}
 {% block jvscript_archivos_defer %}
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const carritoTexto = document.querySelector(".carrito-texto");
+            const carritoIcono = document.querySelector(".carrito-icono");
+
+            function actualizarCarrito() {
+                const anchoVentana = window.innerWidth;
+
+                if (anchoVentana <= 550) {
+                    carritoTexto.style.display = "none"; // Ocultar texto en pantallas muy pequeñas
+                    carritoIcono.style.display = "flex"; // Mostrar ícono
+                } else if (anchoVentana > 550 && anchoVentana <= 992) {
+                    carritoTexto.style.display = "inline-block"; // Mostrar texto en pantallas medianas
+                    carritoIcono.style.display = "none"; // Ocultar ícono
+                } else {
+                    carritoTexto.style.display = "inline-block"; // Mostrar texto en pantallas grandes
+                    carritoIcono.style.display = "none"; // Ocultar ícono
+                }
+            }
+
+            // Ejecutar al cargar la página
+            actualizarCarrito();
+
+            // Ejecutar al redimensionar la ventana
+            window.addEventListener("resize", actualizarCarrito);
+        });
+    </script>
     <script src="{% static 'webapp/js/main.js' %}"></script>
     <script src="{% static 'webapp/js/modal.js' %}"></script>
 {% endblock %}

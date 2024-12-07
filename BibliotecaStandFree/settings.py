@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import os
+from os import getenv
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -19,12 +20,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*q3v#o4djy82fbol6&4kt!#!alj6@m1=7m*_vw@8awxo)n5d&r'
 
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "23124151dasdasd")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+
 
 # Application definition
 
@@ -55,7 +57,7 @@ ROOT_URLCONF = 'BibliotecaStandFree.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -116,14 +118,20 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 # Ruta para la URL de archivos estáticos
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [ BASE_DIR / "static" ]
 
-# Directorio base donde se ubican los archivos estáticos de la app
-STATICFILES_DIRS = [
-    BASE_DIR / "static",  # Apunta a la carpeta "static" en la raíz del proyecto
-]
+MEDIA_ROOT = BASE_DIR / "media/"
+MEDIA_URL = '/media/'
 
-# Default primary key field type
+
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+LOGIN_URL = '/login/'  # URL donde se encuentra tu página de inicio de sesión
+LOGIN_REDIRECT_URL = '/usuario/panel/'  # Redirigir aquí después de iniciar sesión
+
+AUTH_USER_MODEL = 'webapp.Usuario'

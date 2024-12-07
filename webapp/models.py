@@ -1,4 +1,8 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.utils import timezone
+from django.contrib.auth.hashers import make_password, check_password
 
 
 # **Categorías de Libros**
@@ -80,18 +84,86 @@ class Carrito(models.Model):
         return f"Carrito {self.carCodigo} - Total: {self.carTotal}"
 
 
-# **Relación Usuario x Carrito**
-class Usuario(models.Model):
-    usuCodigo = models.CharField(max_length=7, primary_key=True)  # Código del usuario
-    usuNombre = models.CharField(max_length=255)  # Nombre completo
-    usuApodo = models.CharField(max_length=150)  # Apodo del usuario
-    usuCorreo = models.EmailField(unique=True)  # Correo electrónico
-    usuClave = models.CharField(max_length=255)  # Contraseña
-    usuStatus = models.CharField(max_length=3, default="ACT")  # Estado del usuario
+class UsuarioManager(BaseUserManager):
+    """Gestor personalizado para el modelo Usuario."""
 
+    def create_user(self, usuCorreo, usuClave=None, **extra_fields):
+        """Crea y devuelve un usuario común."""
+        if not usuCorreo:
+            raise ValueError(_("El correo electrónico es obligatorio."))
+        usuCorreo = self.normalize_email(usuCorreo)
+        extra_fields.setdefault("is_active", True)
+        user = self.model(usuCorreo=usuCorreo, **extra_fields)
+        if usuClave:  # Permitir usuarios sin contraseña (opcional)
+            user.set_password(usuClave)
+        else:
+            raise ValueError(_("La contraseña es obligatoria."))
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, usuCorreo, usuClave=None, **extra_fields):
+        """Crea y devuelve un superusuario."""
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+
+        if extra_fields.get("is_staff") is not True:
+            raise ValueError(_("El superusuario debe tener is_staff=True."))
+        if extra_fields.get("is_superuser") is not True:
+            raise ValueError(_("El superusuario debe tener is_superuser=True."))
+
+        return self.create_user(usuCorreo, usuClave, **extra_fields)
+
+
+class Usuario(AbstractBaseUser, PermissionsMixin):
+    """Modelo personalizado de Usuario que coincide con la tabla SQL proporcionada."""
+
+    usuNombre = models.CharField(max_length=150, verbose_name=_("Nombre"))
+    usuApellido = models.CharField(max_length=150, verbose_name=_("Apellido"), default="Sin Apellido")
+    usuFechaNacimiento = models.DateField(verbose_name=_("Fecha de Nacimiento"), null=True, blank=True)
+    usuGenero = models.CharField(
+        max_length=1,
+        choices=[('M', 'Masculino'), ('F', 'Femenino'), ('O', 'Otro')],
+        verbose_name=_("Género"),
+        null=True,
+        blank=True
+    )
+    usuTelefono = models.CharField(max_length=15, verbose_name=_("Teléfono"), null=True, blank=True)
+    email = models.EmailField(unique=True, verbose_name=_("Correo Electrónico"))
+    password = models.CharField(max_length=255, verbose_name=_("Contraseña"))  # Usar 'password' como estándar
+    usuApodo = models.CharField(max_length=150, null=True, blank=True, verbose_name=_("Apodo"))
+    usuPreferenciaAnuncios = models.BooleanField(default=False, verbose_name=_("Preferencia por Anuncios"))
+    usuStatus = models.CharField(
+        max_length=3,
+        choices=[("ACT", "Activo"), ("INA", "Inactivo")],
+        default="ACT",
+        verbose_name=_("Estado")
+    )
+    is_active = models.BooleanField(default=True, verbose_name=_("Activo"))
+    is_staff = models.BooleanField(default=False, verbose_name=_("Miembro del personal"))
+    date_joined = models.DateTimeField(default=timezone.now)
+    last_login = models.DateTimeField(blank=True, null=True)
+
+    # Ajustar para usar el email como identificador principal
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["usuNombre", "usuApellido"]
+
+    objects = UsuarioManager()
+
+    class Meta:
+        db_table = "webapp_usuario"  # Coincide con la tabla SQL
+        verbose_name = _("Usuario")
+        verbose_name_plural = _("Usuarios")
 
     def __str__(self):
-        return self.usuNombre
+        return f"{self.usuNombre} {self.usuApellido}"
+
+    def set_password(self, raw_password):
+        """Encripta y asigna una contraseña."""
+        self.password = make_password(raw_password)
+
+    def check_password(self, raw_password):
+        """Verifica si la contraseña proporcionada coincide con la almacenada."""
+        return check_password(raw_password, self.password)
 
 
 class UsuarioXCarrito(models.Model):
@@ -124,4 +196,3 @@ class CartaXCarrito(models.Model):
 
     def __str__(self):
         return f"{self.carta.carNombre} x {self.carxcarCantidad}"
-

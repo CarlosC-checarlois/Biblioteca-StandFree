@@ -2,44 +2,217 @@
 {% block cargar_static %}
     {% load static %}
 {% endblock %}
-{% block sobreescribir_jvscript_archivos %}
-{% endblock %}
 {% block titulo_pagina %}
-    <title>Contáctanos - BibliotecaStand</title>
+    <title>Crear Cuenta - BibliotecaStand</title>
+{% endblock %}
+{% block css_archivos %}
+    <style>
+        #register-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #4a4a4a;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .input-group {
+            flex: 1;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #4a4a4a;
+        }
+
+        .input-group input, .input-group select {
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #login-link {
+            text-align: center;
+            font-size: 14px;
+        }
+
+        #register-button {
+            background: #ff5733;
+            color: white;
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #register-button:hover {
+            background: #e74c3c;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+            }
+        }
+
+        .btn-wsp {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 25px;
+            right: 25px;
+            background: #fff;
+            color: #FFF;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 35px;
+            box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            transition: all 300ms ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-wsp:hover {
+            background: #d0ffd9;
+        }
+
+        .btn-wsp img {
+            width: 100%; /* Hace que la imagen ocupe todo el ancho del contenedor */
+            height: 100%; /* Hace que la imagen ocupe toda la altura del contenedor */
+            object-fit: cover; /* Ajusta la imagen para llenar completamente el contenedor sin distorsionar */
+            border-radius: 50%; /* Mantiene el borde redondeado de la imagen */
+        }
+
+        @media only screen and (min-width: 320px) and (max-width: 768px) {
+            .btn-wsp {
+                width: 63px;
+                height: 63px;
+            }
+
+            .btn-wsp img {
+                width: 100%; /* Ajusta el tamaño para que llene el nuevo tamaño del botón */
+                height: 100%; /* Ajusta el tamaño para que llene el nuevo tamaño del botón */
+            }
+        }
+
+    </style>
 {% endblock %}
 {% block contenido_pagina %}
     <main id="page-content">
         <div id="register-container">
-            <h2>Crear Cuenta</h2>
+            <h2 class="vision_h1_span">Crear Cuenta</h2>
             <form id="registerForm" method="POST" action="{% url 'index_register' %}">
                 {% csrf_token %}
-                <div class="input-group">
-                    <label for="nombre">Nombre Completo</label>
-                    <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre completo" required>
+
+                <!-- Nombre y Apellido -->
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="nombre">Primer Nombre</label>
+                        <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="apellido">Primer Apellido</label>
+                        <input type="text" id="apellido" name="apellido" placeholder="Ingresa tu apellido" required>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label for="email">Correo Electrónico</label>
-                    <input type="email" id="email" name="email" placeholder="Ingresa tu correo electrónico" required>
+
+                <!-- Fecha de Nacimiento y Género -->
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="nacimiento">Fecha de Nacimiento</label>
+                        <input type="date" id="nacimiento" name="nacimiento" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="genero">Género</label>
+                        <select id="genero" name="genero" required>
+                            <option value="" disabled selected>Selecciona tu género</option>
+                            <option value="M">Masculino</option>
+                            <option value="F">Femenino</option>
+                            <option value="O">Otro</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label for="usuario">Usuario</label>
-                    <input type="text" id="usuario" name="usuario" placeholder="Crea un nombre de usuario" required>
+
+                <!-- Teléfono y Preferencia de Anuncios -->
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="telefono">Teléfono</label>
+                        <input type="tel" id="telefono" name="telefono" placeholder="Ingresa tu teléfono" required
+                               pattern="[0-9]+" title="Solo números">
+                    </div>
+                    <div class="input-group">
+                        <label for="anuncios">¿Deseas recibir anuncios?</label>
+                        <select id="anuncios" name="anuncios" required>
+                            <option value="True">Sí</option>
+                            <option value="False">No</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label for="contraseña">Contraseña</label>
-                    <input type="password" id="contraseña" name="contraseña" placeholder="Crea una contraseña" required>
+
+                <!-- Correo Electrónico y Usuario -->
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="email">Correo Electrónico</label>
+                        <input type="email" id="email" name="email" placeholder="Ingresa tu correo electrónico"
+                               required>
+                    </div>
+                    <div class="input-group">
+                        <label for="usuario">Usuario (Apodo)</label>
+                        <input type="text" id="usuario" name="usuario" placeholder="Crea un nombre de usuario" required>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label for="confirmar_contraseña">Confirmar Contraseña</label>
-                    <input type="password" id="confirmar_contraseña" name="confirmar_contraseña"
-                           placeholder="Repite la contraseña" required>
+
+                <!-- Contraseña y Confirmar Contraseña -->
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="contraseña">Contraseña</label>
+                        <input type="password" id="contraseña" name="contraseña" placeholder="Crea una contraseña"
+                               required minlength="8">
+                    </div>
+                    <div class="input-group">
+                        <label for="confirmar_contraseña">Confirmar Contraseña</label>
+                        <input type="password" id="confirmar_contraseña" name="confirmar_contraseña"
+                               placeholder="Repite la contraseña" required>
+                    </div>
                 </div>
+
+                <!-- Enlace a Inicio de Sesión -->
                 <div id="login-link">
                     <p>¿Ya tienes una cuenta? <a href="{% url 'index_login' %}">Inicia sesión aquí</a></p>
                 </div>
+
+                <!-- Botón de Registro -->
                 <button type="submit" id="register-button">Registrarse</button>
             </form>
 
+            <!-- Mensajes de Error o Éxito -->
             {% if messages %}
                 <div class="mt-3">
                     {% for message in messages %}
@@ -53,27 +226,66 @@
 {% block jvscript_archivos_defer %}
     <script>
         document.getElementById('registerForm').addEventListener('submit', function (e) {
-            e.preventDefault();
+            e.preventDefault(); // Prevenir el envío si hay errores.
 
-            const nombre = document.getElementById('nombre').value;
-            const email = document.getElementById('email').value;
-            const usuario = document.getElementById('usuario').value;
+            const errores = [];
+
+            // Capturar valores del formulario
+            const nombre = document.getElementById('nombre').value.trim();
+            const apellido = document.getElementById('apellido').value.trim();
+            const nacimiento = document.getElementById('nacimiento').value;
+            const genero = document.getElementById('genero').value;
+            const telefono = document.getElementById('telefono').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const usuario = document.getElementById('usuario').value.trim();
             const contraseña = document.getElementById('contraseña').value;
-            const confirmar_contraseña = document.getElementById('confirmar_contraseña').value;
+            const confirmarContraseña = document.getElementById('confirmar_contraseña').value;
 
-            // Validar las contraseñas
-            if (contraseña !== confirmar_contraseña) {
-                alert('Las contraseñas no coinciden.');
-                return;
+            // Validaciones
+            if (!nombre) {
+                errores.push("El campo 'Nombre' es obligatorio.");
             }
 
-            // Redirigir con los parámetros en la URL
-            const url = new URL(window.location.href);
-            url.searchParams.set('nombre', nombre);
-            url.searchParams.set('email', email);
-            url.searchParams.set('usuario', usuario);
-            url.searchParams.set('contraseña', contraseña); // Es recomendable no pasar contraseñas en URL, pero para ejemplo funciona
-            window.location.href = url.toString();
+            if (!apellido) {
+                errores.push("El campo 'Apellido' es obligatorio.");
+            }
+
+            if (!nacimiento) {
+                errores.push("El campo 'Fecha de Nacimiento' es obligatorio.");
+            }
+
+            if (!genero) {
+                errores.push("El campo 'Género' es obligatorio.");
+            }
+
+            if (!telefono.match(/^\d+$/)) {
+                errores.push("El campo 'Teléfono' debe contener solo números.");
+            }
+
+            if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                errores.push("El correo electrónico no es válido.");
+            }
+
+            if (!usuario) {
+                errores.push("El campo 'Usuario' es obligatorio.");
+            }
+
+            if (contraseña.length < 8) {
+                errores.push("La contraseña debe tener al menos 8 caracteres.");
+            }
+
+            if (contraseña !== confirmarContraseña) {
+                errores.push("Las contraseñas no coinciden.");
+            }
+
+            // Mostrar errores si existen
+            if (errores.length > 0) {
+                alert("Errores encontrados:\n" + errores.join("\n"));
+                return; // Detener el envío
+            }
+
+            // Enviar el formulario si todo es válido
+            this.submit();
         });
     </script>
 {% endblock %}

@@ -2,6 +2,53 @@
 {% block cargar_static %}
     {% load static %}
 {% endblock %}
+{% block css_archivos %}
+    <style>
+
+        .btn-wsp {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 25px;
+            right: 25px;
+            background: #fff;
+            color: #FFF;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 35px;
+            box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            transition: all 300ms ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-wsp:hover {
+            background: #d0ffd9;
+        }
+
+        .btn-wsp img {
+            width: 100%; /* Hace que la imagen ocupe todo el ancho del contenedor */
+            height: 100%; /* Hace que la imagen ocupe toda la altura del contenedor */
+            object-fit: cover; /* Ajusta la imagen para llenar completamente el contenedor sin distorsionar */
+            border-radius: 50%; /* Mantiene el borde redondeado de la imagen */
+        }
+
+        @media only screen and (min-width: 320px) and (max-width: 768px) {
+            .btn-wsp {
+                width: 63px;
+                height: 63px;
+            }
+
+            .btn-wsp img {
+                width: 100%; /* Ajusta el tamaño para que llene el nuevo tamaño del botón */
+                height: 100%; /* Ajusta el tamaño para que llene el nuevo tamaño del botón */
+            }
+        }
+
+    </style>
+{% endblock %}
 {% block sobreescribir_jvscript_archivos %}
 {% endblock %}
 {% block titulo_pagina %}
@@ -80,28 +127,28 @@
     </main>
 {% endblock %}
 {% block jvscript_archivos_defer %}
-<script>
-    // Función de inicialización de Google Maps
-    function initMap() {
-        // Coordenadas de la Pontificia Universidad Católica del Ecuador
-        const location = { lat: -0.207102, lng: -78.485361 };
+    <script>
+        // Función de inicialización de Google Maps
+        function initMap() {
+            // Coordenadas de la Pontificia Universidad Católica del Ecuador
+            const location = {lat: -0.207102, lng: -78.485361};
 
-        // Crear el mapa centrado en la ubicación
-        const map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 15,
-            center: location,
-        });
+            // Crear el mapa centrado en la ubicación
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 15,
+                center: location,
+            });
 
-        // Agregar un marcador personalizado con el ícono proporcionado
-        const marker = new google.maps.Marker({
-            position: location,
-            map: map,
-            title: "Pontificia Universidad Católica del Ecuador",
-            icon: {
-                url: "{% static 'webapp/images/location-icon.png' %}", // Ruta al ícono de ubicación
-                scaledSize: new google.maps.Size(40, 40), // Ajusta el tamaño del ícono
-            },
-        });
-    }
-</script>
+            // Agregar un marcador personalizado con el ícono proporcionado
+            const marker = new google.maps.Marker({
+                position: location,
+                map: map,
+                title: "Pontificia Universidad Católica del Ecuador",
+                icon: {
+                    url: "{% static 'webapp/images/location-icon.png' %}", // Ruta al ícono de ubicación
+                    scaledSize: new google.maps.Size(40, 40), // Ajusta el tamaño del ícono
+                },
+            });
+        }
+    </script>
 {% endblock %}

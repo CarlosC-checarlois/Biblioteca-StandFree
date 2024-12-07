@@ -4,23 +4,82 @@
 {% endblock %}
 
 {% block titulo_pagina %}
-<title>Iniciar Sesión - BibliotecaStand</title>
+    <title>Iniciar Sesión - BibliotecaStand</title>
 {% endblock %}
+{% block css_archivos %}
+    <style>
+        .contenedor_login {
+            background-color: #ffe8b6;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
+        .section_login {
+            min-height: calc(100vh - 120px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button[type="submit"] {
+            background-color: #333;
+            color: #fff;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #555;
+        }
+
+        .btn-wsp {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 25px;
+            right: 25px;
+            background: #fff;
+            color: #FFF;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 35px;
+            box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-wsp:hover {
+            background: #d0ffd9;
+        }
+
+        .btn-wsp img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+    </style>
+{% endblock %}
 {% block contenido_pagina %}
-<section class="section_login d-flex justify-content-center align-items-center" style="min-height: calc(100vh - 120px);">
-    <div class="contenedor_login p-4" style="background-color: #ffe8b6; border-radius: 8px; width: 400px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-        <h2 class="text-center mb-4" style="font-weight: bold;">Iniciar Sesión</h2>
-        <form id="loginForm">
-            <!-- Campo Usuario -->
+<section class="section_login">
+    <div class="contenedor_login">
+        <h3 class="vision_h3_span">Iniciar Sesión</h3>
+        <form method="POST" action="{% url 'index_login' %}" id="loginForm">
+            {% csrf_token %}
+            <!-- Campo Correo Electrónico -->
             <div class="mb-3">
-                <label for="usuario" class="form-label" style="font-weight: bold;">Usuario</label>
+                <label for="email" class="form-label" style="font-weight: bold;">Correo Electrónico</label>
                 <input
                     type="email"
-                    id="usuario"
+                    id="email"
                     name="usuario"
                     class="form-control"
-                    placeholder="Ingresa tu usuario"
+                    placeholder="Ingresa tu correo electrónico"
                     required>
             </div>
             <!-- Campo Contraseña -->
@@ -34,12 +93,21 @@
                     placeholder="Ingresa tu contraseña"
                     required>
             </div>
-            <!-- Registro y Recuperación -->
+            <!-- Mostrar mensajes de error o éxito -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <!-- Mensaje de Registro -->
             <div class="text-start">
-                <a href="{% url 'index_register' %}" class="text-danger" style="font-size: 0.9rem;">
-                    Aún no tienes una cuenta?
-                </a>
-                <p class="text-danger" style="font-size: 0.9rem; font-weight: bold; margin-bottom: 0;">Regístrate aquí</p>
+                <p>¿Aún no tienes una cuenta?
+                    <a href="{% url 'index_register' %}" class="text-danger" style="font-size: 0.9rem;">
+                        Regístrate aquí
+                    </a>
+                </p>
             </div>
             <!-- Botón de Enviar -->
             <button type="submit" class="btn btn-dark w-100 mt-3">Enviar</button>
@@ -50,40 +118,44 @@
 
 {% block jvscript_archivos_defer %}
 <script>
-    document.getElementById('loginForm').addEventListener('submit', async function (e) {
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
         e.preventDefault();
 
-        const usuario = document.getElementById('usuario').value;
+        const email = document.getElementById('email').value;
         const contraseña = document.getElementById('contraseña').value;
 
-        // Validar que el usuario sea un correo electrónico
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(usuario)) {
-            alert('Por favor, ingresa un correo electrónico válido.');
+        // Validar que los campos no estén vacíos
+        if (!email || !contraseña) {
+            alert('Por favor, completa todos los campos.');
             return;
         }
 
-        try {
-            const response = await fetch('https://api.tuservidor.com/login', { // Cambia la URL por la de tu API
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ usuario, contraseña })
-            });
-
-            const result = await response.json();
-
+        // Hacer la solicitud POST al servidor
+        fetch(window.location.href, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                usuario: email,  // Correo electrónico como "usuario"
+                contraseña: contraseña,
+            }),
+        })
+        .then(response => {
             if (response.ok) {
-                alert('Inicio de sesión exitoso');
-                // Redirigir o realizar otra acción
+                // Redirigir al inicio si las credenciales son correctas
+                window.location.href = "{% url 'index' %}";
             } else {
-                alert(`Error: ${result.message}`);
+                return response.text().then(() => {
+                    alert('Correo electrónico o contraseña incorrectos.');
+                });
             }
-        } catch (error) {
-            console.error('Error al enviar el formulario:', error);
-            alert('Hubo un problema al iniciar sesión. Intenta nuevamente.');
-        }
+        })
+        .catch(error => {
+            console.error('Error al iniciar sesión:', error);
+            alert('Error al procesar la solicitud.');
+        });
     });
 </script>
 {% endblock %}
