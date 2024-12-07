@@ -35,5 +35,6 @@ urlpatterns = [
                   path('carrito/eliminar/<str:producto_id>/<str:tipo_producto>/', webapp_views.eliminar_del_carrito,
                        name='eliminar_del_carrito'),
                   path('logout/', webapp_views.index_logout, name='index_logout'),
+    
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
               + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

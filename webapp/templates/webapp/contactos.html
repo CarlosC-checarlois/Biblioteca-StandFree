@@ -95,7 +95,9 @@
             <!-- Formulario de Contacto -->
             <section class="formulario-contacto" aria-labelledby="form-contacto">
                 <h2 id="form-contacto">Envíanos un mensaje</h2>
-                <form id="form-contacto" aria-label="Formulario de contacto">
+                <form id="form-contacto" method="POST" action="{% url 'index_contacto' %}"
+                      aria-label="Formulario de contacto">
+                    {% csrf_token %}
                     <div class="input-group">
                         <label for="nombre">Nombre</label>
                         <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
@@ -111,6 +113,7 @@
                     </div>
                     <button type="submit" class="boton-enviar" aria-label="Enviar mensaje">Enviar</button>
                 </form>
+
                 <p id="response-message" class="response-message"></p>
             </section>
 

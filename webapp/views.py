@@ -15,6 +15,7 @@ from django.db import transaction
 
 from django.db.models import F
 
+
 def index(request):
     carrito = request.session.get("carrito", {})
     total_items = sum(item['cantidad'] for item in carrito.values())
@@ -26,7 +27,8 @@ def index_cartas(request):
     total_items = sum(item['cantidad'] for item in carrito.values())
     # Obtener las cartas desde la base de datos
     cartas = Carta.objects.all()
-    return render(request, 'webapp/cartas.html', {'productos': cartas, 'total_items': total_items, 'media_url': settings.MEDIA_URL})
+    return render(request, 'webapp/cartas.html',
+                  {'productos': cartas, 'total_items': total_items, 'media_url': settings.MEDIA_URL})
 
 
 def index_libros(request):
@@ -41,6 +43,27 @@ def index_libros(request):
 def index_contacto(request):
     carrito = request.session.get("carrito", {})
     total_items = sum(item['cantidad'] for item in carrito.values())
+
+    if request.method == "POST":
+        nombre = request.POST.get("nombre")
+        email = request.POST.get("email")
+        mensaje = request.POST.get("mensaje")
+
+        if nombre and email and mensaje:
+            # Guardar el mensaje en la base de datos
+            Contacto.objects.create(nombre=nombre, email=email, mensaje=mensaje)
+            # Mostrar un mensaje de éxito o redirigir a la misma página con una confirmación
+            return render(request, 'webapp/contactos.html', {
+                'total_items': total_items,
+                'success_message': "¡Gracias por contactarnos! Tu mensaje ha sido enviado.",
+            })
+
+        # En caso de error en el formulario, mostrar un mensaje de error
+        return render(request, 'webapp/contactos.html', {
+            'total_items': total_items,
+            'error_message': "Por favor, completa todos los campos correctamente.",
+        })
+
     return render(request, 'webapp/contactos.html', {'total_items': total_items})
 
 
@@ -81,7 +104,6 @@ def index_login(request):
             messages.error(request, "Correo o contraseña incorrectos.")
 
     return render(request, 'webapp/login.html', {'total_items': total_items})
-
 
 
 def panel_usuario(request):
@@ -246,7 +268,7 @@ def finalizar_compra(request):
             nuevo_carrito = Carrito.objects.create(
                 carCodigo=codigo_carrito,
                 carSubtotal=total / 1.15,  # Calcular subtotal antes de IVA
-                carIva=total * 0.15,      # IVA del 15%
+                carIva=total * 0.15,  # IVA del 15%
                 carTotal=total,
                 carStatus="ACT",
             )

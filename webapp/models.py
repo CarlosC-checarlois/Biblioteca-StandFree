@@ -196,3 +196,15 @@ class CartaXCarrito(models.Model):
 
     def __str__(self):
         return f"{self.carta.carNombre} x {self.carxcarCantidad}"
+
+
+class Contacto(models.Model):
+    nombre = models.CharField(max_length=150, verbose_name="Nombre del Contacto")
+    email = models.EmailField(verbose_name="Correo Electrónico")
+    mensaje = models.TextField(verbose_name="Mensaje")
+    fecha_envio = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de Envío")
+
+    def __str__(self):
+        return f"Contacto de {self.nombre} - {self.email}"
+
+
