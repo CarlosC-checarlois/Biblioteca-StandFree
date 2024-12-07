@@ -3,7 +3,9 @@ beautifulsoup4==4.12.3
 Django==3.2.25
 django-bootstrap-v5==1.0.11
 Faker==18.13.0
+gunicorn==23.0.0
 importlib-metadata==6.7.0
+packaging==24.0
 Pillow==9.5.0
 python-dateutil==2.9.0.post0
 pytz==2024.2
