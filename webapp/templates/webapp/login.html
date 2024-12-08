@@ -66,96 +66,124 @@
     </style>
 {% endblock %}
 {% block contenido_pagina %}
-<section class="section_login">
-    <div class="contenedor_login">
-        <h3 class="vision_h3_span">Iniciar Sesión</h3>
-        <form method="POST" action="{% url 'index_login' %}" id="loginForm">
-            {% csrf_token %}
-            <!-- Campo Correo Electrónico -->
-            <div class="mb-3">
-                <label for="email" class="form-label" style="font-weight: bold;">Correo Electrónico</label>
-                <input
-                    type="email"
-                    id="email"
-                    name="usuario"
-                    class="form-control"
-                    placeholder="Ingresa tu correo electrónico"
-                    required>
-            </div>
-            <!-- Campo Contraseña -->
-            <div class="mb-3">
-                <label for="contraseña" class="form-label" style="font-weight: bold;">Contraseña</label>
-                <input
-                    type="password"
-                    id="contraseña"
-                    name="contraseña"
-                    class="form-control"
-                    placeholder="Ingresa tu contraseña"
-                    required>
-            </div>
-            <!-- Mostrar mensajes de error o éxito -->
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-            <!-- Mensaje de Registro -->
-            <div class="text-start">
-                <p>¿Aún no tienes una cuenta?
-                    <a href="{% url 'index_register' %}" class="text-danger" style="font-size: 0.9rem;">
-                        Regístrate aquí
-                    </a>
-                </p>
-            </div>
-            <!-- Botón de Enviar -->
-            <button type="submit" class="btn btn-dark w-100 mt-3">Enviar</button>
-        </form>
-    </div>
-</section>
+    <section class="section_login">
+        <div class="contenedor_login">
+            <h3 class="vision_h3_span">Iniciar Sesión</h3>
+            <form method="POST" action="{% url 'index_login' %}" id="loginForm">
+                {% csrf_token %}
+                <!-- Campo Correo Electrónico -->
+                <div class="mb-3">
+                    <label for="email" class="form-label" style="font-weight: bold;">Correo Electrónico</label>
+                    <input
+                            type="email"
+                            id="email"
+                            name="usuario"
+                            class="form-control"
+                            placeholder="Ingresa tu correo electrónico"
+                            required>
+                </div>
+                <!-- Campo Contraseña -->
+                <div class="mb-3">
+                    <label for="contraseña" class="form-label" style="font-weight: bold;">Contraseña</label>
+                    <input
+                            type="password"
+                            id="contraseña"
+                            name="contraseña"
+                            class="form-control"
+                            placeholder="Ingresa tu contraseña"
+                            required>
+                </div>
+                <!-- Mostrar mensajes de error o éxito -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                <!-- Mensaje de Registro -->
+                <div class="text-start">
+                    <p>¿Aún no tienes una cuenta?
+                        <a href="{% url 'index_register' %}" class="text-danger" style="font-size: 0.9rem;">
+                            Regístrate aquí
+                        </a>
+                    </p>
+                </div>
+                <!-- Botón de Enviar -->
+                <button type="submit" class="btn btn-dark w-100 mt-3">Enviar</button>
+            </form>
+        </div>
+    </section>
 {% endblock %}
 
 {% block jvscript_archivos_defer %}
-<script>
-    document.getElementById('loginForm').addEventListener('submit', function (e) {
-        e.preventDefault();
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
 
-        const email = document.getElementById('email').value;
-        const contraseña = document.getElementById('contraseña').value;
+            const email = document.getElementById('email').value;
+            const contraseña = document.getElementById('contraseña').value;
 
-        // Validar que los campos no estén vacíos
-        if (!email || !contraseña) {
-            alert('Por favor, completa todos los campos.');
-            return;
-        }
-
-        // Hacer la solicitud POST al servidor
-        fetch(window.location.href, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': '{{ csrf_token }}',
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({
-                usuario: email,  // Correo electrónico como "usuario"
-                contraseña: contraseña,
-            }),
-        })
-        .then(response => {
-            if (response.ok) {
-                // Redirigir al inicio si las credenciales son correctas
-                window.location.href = "{% url 'index' %}";
-            } else {
-                return response.text().then(() => {
-                    alert('Correo electrónico o contraseña incorrectos.');
-                });
+            // Validar que los campos no estén vacíos
+            if (!email || !contraseña) {
+                alert('Por favor, completa todos los campos.');
+                return;
             }
-        })
-        .catch(error => {
-            console.error('Error al iniciar sesión:', error);
-            alert('Error al procesar la solicitud.');
+
+            // Hacer la solicitud POST al servidor
+            fetch(window.location.href, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    usuario: email,  // Correo electrónico como "usuario"
+                    contraseña: contraseña,
+                }),
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Redirigir al inicio si las credenciales son correctas
+                        window.location.href = "{% url 'index' %}";
+                    } else {
+                        return response.text().then(() => {
+                            alert('Correo electrónico o contraseña incorrectos.');
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al iniciar sesión:', error);
+                    alert('Error al procesar la solicitud.');
+                });
         });
-    });
-</script>
+                document.addEventListener("DOMContentLoaded", () => {
+            const carritoTexto = document.querySelector(".carrito-texto");
+            const carritoIcono = document.querySelector(".carrito-icono");
+
+            function actualizarCarrito() {
+                const anchoVentana = window.innerWidth;
+
+                if (anchoVentana <= 550) {
+                    carritoTexto.style.display = "none"; // Ocultar texto en pantallas muy pequeñas
+                    carritoIcono.style.display = "flex"; // Mostrar ícono
+                } else if (anchoVentana > 550 && anchoVentana <= 992) {
+                    carritoTexto.style.display = "inline-block"; // Mostrar texto en pantallas medianas
+                    carritoIcono.style.display = "none"; // Ocultar ícono
+                } else {
+                    carritoTexto.style.display = "inline-block"; // Mostrar texto en pantallas grandes
+                    carritoIcono.style.display = "none"; // Ocultar ícono
+                }
+            }
+
+            // Ejecutar al cargar la página
+            actualizarCarrito();
+
+            // Ejecutar al redimensionar la ventana
+            window.addEventListener("resize", actualizarCarrito);
+        });
+    </script>
+    <script src="{% static 'webapp/js/main.js' %}"></script>
+    <script src="{% static 'webapp/js/modal.js' %}"></script>
+
 {% endblock %}

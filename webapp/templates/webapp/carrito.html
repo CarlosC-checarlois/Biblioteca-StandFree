@@ -158,6 +158,32 @@
             if (totalCarritoElement) {
                 totalCarritoElement.textContent = totalCarrito.toFixed(2);
             }
+
+        });
+                document.addEventListener("DOMContentLoaded", () => {
+            const carritoTexto = document.querySelector(".carrito-texto");
+            const carritoIcono = document.querySelector(".carrito-icono");
+
+            function actualizarCarrito() {
+                const anchoVentana = window.innerWidth;
+
+                if (anchoVentana <= 550) {
+                    carritoTexto.style.display = "none"; // Ocultar texto en pantallas muy pequeñas
+                    carritoIcono.style.display = "flex"; // Mostrar ícono
+                } else if (anchoVentana > 550 && anchoVentana <= 992) {
+                    carritoTexto.style.display = "inline-block"; // Mostrar texto en pantallas medianas
+                    carritoIcono.style.display = "none"; // Ocultar ícono
+                } else {
+                    carritoTexto.style.display = "inline-block"; // Mostrar texto en pantallas grandes
+                    carritoIcono.style.display = "none"; // Ocultar ícono
+                }
+            }
+
+            // Ejecutar al cargar la página
+            actualizarCarrito();
+
+            // Ejecutar al redimensionar la ventana
+            window.addEventListener("resize", actualizarCarrito);
         });
     </script>
     <script src="{% static 'webapp/js/main.js' %}"></script>
