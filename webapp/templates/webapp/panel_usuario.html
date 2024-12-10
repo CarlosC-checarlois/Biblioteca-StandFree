@@ -6,6 +6,8 @@
     <title>Panel de Usuario - BibliotecaStand</title>
 {% endblock %}
 {% block css_archivos %}
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
     <style>
         .btn-wsp {
             position: fixed;
@@ -49,21 +51,268 @@
             }
         }
 
+        /*ESTILOS DE SWITCH*/
+        .switch {
+            width: 60px;
+            height: 30px;
+            padding: 0 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            border-radius: 100px;
+            border: #333333 solid 2px;
+            background-color: #132b41;
+        }
+
+        .switch i {
+            font-size: 1rem;
+            color: #fdc21c;
+        }
+
+        .menu-options li:last-child::before {
+            content: "";
+            position: absolute;
+            height: 25px;
+            width: 25px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: solid thin #000;
+            left: 0;
+            right: unset;
+        }
+
+        .menu-options li:last-child.active::before {
+            right: 0;
+            left: unset;
+            border: solid thin #fff;
+        }
+
+        .menu-options li:last-child.active i:first-child {
+            color: #fff;
+        }
+
+        .menu-options li:last-child.active {
+            background-color: chocolate;
+            border: solid 2px #fff;
+        }
+
+        body.active .dark-header {
+            background-color: #1f1f1f;
+            color: #e0e0e0;
+            border-bottom: 1px solid #444;
+        }
+
+
+        body.active .dark-header a {
+            color: #e0e0e0; /* Cambiar color de enlaces */
+        }
+
+        body.active .dark-header a:hover {
+            color: #ffd700; /* Color de hover para enlaces */
+        }
+
+        body.active .header {
+            background-color: #313131;
+
+        }
+
+
+        body.active nav ul li a {
+            color: #cfcfcf;
+        }
+
+        body.active nav ul li a {
+            color: #cfcfcf;
+        }
+
+        body.active .header_info {
+            background-color: #2c2c2c;
+        }
+
+        /* Tabla en modo oscuro */
+        body.dark-mode .table {
+            background-color: #1f1f1f; /* Fondo oscuro para la tabla */
+            color: #e0e0e0; /* Texto claro */
+            border-color: #444; /* Bordes oscuros */
+        }
+
+        /* Encabezado de la tabla en modo oscuro */
+        body.dark-mode .table thead th {
+            background-color: #2b2b2b; /* Fondo más oscuro para el encabezado */
+            color: #e0e0e0; /* Texto claro en el encabezado */
+        }
+
+        /* Celdas de la tabla en modo oscuro */
+        body.dark-mode .table td,
+        body.dark-mode .table th {
+            color: #e0e0e0; /* Texto claro para las celdas */
+            border-color: #444; /* Bordes oscuros */
+        }
+
+        /* Hover sobre las filas en el modo oscuro */
+        body.dark-mode .table tbody tr:hover {
+            background-color: #2b2b2b; /* Fondo más claro al pasar el mouse */
+        }
+
+        /* Mensaje de "No tienes carritos registrados" en modo oscuro */
+        body.dark-mode .table tbody tr td.text-center {
+            color: #ccc; /* Texto claro para los mensajes */
+        }
+
+        /* Estilos para el h2 en modo oscuro */
+        body.dark-mode h2.bg-warning {
+            background-color: #2b2b2b; /* Fondo oscuro */
+            color: #ffd700; /* Texto claro en amarillo dorado */
+            border: 1px solid #444; /* Borde para darle contraste */
+        }
+
+        /* Opcional: Cambiar color del ícono */
+        body.dark-mode h2.bg-warning i {
+            color: #ffd700;
+        }
+
+        /* Modo oscuro: estilo para el h2 de bienvenida */
+        body.dark-mode h2.bg-warning {
+            background-color: #2c2c2c; /* Fondo oscuro */
+            color: #ffffff; /* Texto blanco */
+            border: 1px solid #444; /* Borde oscuro */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra sutil */
+        }
+
+        /* Cambiar color del icono en modo oscuro */
+        body.dark-mode h2.bg-warning i {
+            color: #ffd700; /* Amarillo dorado para el icono */
+        }
+
+        /* En modo oscuro, resaltar el nombre del usuario */
+        body.dark-mode h2.bg-warning span {
+            color: #ffd700; /* Amarillo dorado para el rol */
+            font-weight: bold;
+        }
+
+        /* Estilo para el main en modo oscuro */
+        body.dark-mode #panel_usuario {
+            background-color: #121212; /* Fondo oscuro */
+            color: #e0e0e0; /* Texto claro */
+            border-radius: 8px; /* Opcional: redondear esquinas */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra sutil */
+        }
+
+        /* Estilo para el section en modo oscuro */
+        body.dark-mode .user-panel-section {
+            background-color: #1f1f1f; /* Fondo ligeramente más claro que el main */
+            color: #ffffff; /* Texto blanco */
+            border: 1px solid #333; /* Borde oscuro para destacar */
+            padding: 20px; /* Espaciado para que sea consistente */
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5); /* Sombra interna */
+        }
+
+        /* Modo oscuro para el contenedor principal */
+        body.dark-mode .col-12.d-flex.align-items-center {
+            background-color: #1f1f1f; /* Fondo oscuro */
+            color: #e0e0e0; /* Texto claro */
+            border: 1px solid #333; /* Borde oscuro */
+            padding: 15px; /* Espaciado interno */
+            border-radius: 8px; /* Opcional: esquinas redondeadas */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5); /* Sombra para destacar */
+        }
+
+        /* En modo oscuro, resaltar los íconos */
+        body.dark-mode .col-12.d-flex.align-items-center i {
+            color: #ffd700; /* Amarillo dorado para íconos */
+        }
+
+        /* En modo oscuro, estilos para el texto específico */
+        body.dark-mode .col-12.d-flex.align-items-center h2 {
+            color: #ffffff; /* Texto blanco */
+            background-color: #2b2b2b; /* Fondo oscuro para el h2 */
+            border: 1px solid #444; /* Borde más claro */
+            padding: 10px; /* Espaciado interno */
+            border-radius: 5px; /* Esquinas redondeadas */
+        }
+
+        /* En modo oscuro, resaltar el texto del rol y usuario */
+        body.dark-mode .col-12.d-flex.align-items-center h2 span {
+            color: #ffd700; /* Amarillo para resaltar el rol */
+            font-weight: bold;
+        }
+
+        /* Modo oscuro para el h2 de bienvenida */
+        body.dark-mode h2.bg-warning {
+            background-color: #2c2c2c; /* Fondo oscuro */
+            color: #ffffff; /* Texto blanco */
+            border: 1px solid #444; /* Borde oscuro */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5); /* Sombra sutil */
+            transition: all 0.3s ease-in-out; /* Transición suave */
+        }
+
+        /* Cambiar color del ícono en modo oscuro */
+        body.dark-mode h2.bg-warning i {
+            color: #ffd700; /* Amarillo dorado para el ícono */
+        }
+
+        /* En modo oscuro, resaltar el texto del rol */
+        body.dark-mode h2.bg-warning span {
+            color: #ffd700; /* Amarillo dorado para resaltar el rol */
+            font-weight: bold; /* Negrita para resaltar */
+        }
+
+        /* Modo oscuro para el contenedor principal */
+        body.dark-mode .col-12.d-flex.align-items-center {
+            background-color: #1f1f1f; /* Fondo oscuro */
+            color: #e0e0e0; /* Texto claro */
+            border: 1px solid #333; /* Borde oscuro */
+            padding: 15px; /* Espaciado interno */
+            border-radius: 8px; /* Esquinas redondeadas */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5); /* Sombra sutil */
+            transition: all 0.3s ease-in-out; /* Transición suave */
+        }
+
+        /* Modo oscuro para el h2 */
+        body.dark-mode .col-12.d-flex.align-items-center h2 {
+            background-color: #2c2c2c; /* Fondo oscuro para el h2 */
+            color: #ffffff; /* Texto blanco */
+            border: 1px solid #444; /* Borde oscuro */
+            padding: 10px; /* Espaciado interno */
+            border-radius: 8px; /* Esquinas redondeadas */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5); /* Sombra */
+        }
+
+        /* Íconos dentro del h2 en modo oscuro */
+        body.dark-mode .col-12.d-flex.align-items-center h2 i {
+            color: #ffd700; /* Amarillo dorado para los íconos */
+        }
+
+        /* Resaltar el texto del rol en modo oscuro */
+        body.dark-mode .col-12.d-flex.align-items-center h2 span {
+            color: #ffd700; /* Amarillo dorado para el rol */
+            font-weight: bold; /* Negrita para destacar */
+        }
+
+
     </style>
 {% endblock %}
 {% block contenido_pagina %}
-    <br><br><br><br>
     <main id="panel_usuario">
         <section class="user-panel-section py-4">
             <div class="container">
                 <!-- Bienvenida al Usuario -->
+                <br><br><br>
                 <div class="row mb-4">
-                    <div class="col-12">
-                        <h2 class="text-center bg-warning text-dark py-3 rounded shadow">
+                    <div class="col-12 d-flex align-items-center">
+                        <h2 class="text-center rounded shadow">
                             <i class="bi bi-person-circle"></i>
                             Rol: <span class="text-uppercase">{{ usuario.usuStatus|default:"Usuario" }}</span>
                             (Bienvenido, {{ usuario.usuNombre }} {{ usuario.usuApellido }})
                         </h2>
+
+                        <ul class="menu-options">
+                            <li class="switch">
+                                <i class='bx bxs-sun'></i>
+                                <i class='bx bxs-moon'></i>
+                            </li>
+                        </ul>
                     </div>
                 </div>
 
@@ -105,11 +354,41 @@
                     </div>
                 </div>
             </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
         </section>
     </main>
 {% endblock %}
-
-
 {% block jvscript_archivos_defer %}
     <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -137,6 +416,41 @@
             // Ejecutar al redimensionar la ventana
             window.addEventListener("resize", actualizarCarrito);
         });
+document.addEventListener("DOMContentLoaded", () => {
+        const switchElement = document.querySelector(".switch");
+        const darkModeClass = "dark-mode";
+        const header = document.querySelector("header");
+
+        // Verificar el estado inicial del modo oscuro en localStorage
+        const darkModePreference = localStorage.getItem("darkMode");
+
+        if (darkModePreference === "enabled") {
+            // Si está habilitado el modo oscuro, activarlo
+            document.body.classList.add(darkModeClass);
+            header.classList.add("dark-header"); // Agregar clase al header
+            switchElement.classList.add("active"); // Reflejar el estado en el switch
+        } else {
+            // Si no está habilitado, asegurar que esté en modo claro
+            document.body.classList.remove(darkModeClass);
+            header.classList.remove("dark-header");
+            switchElement.classList.remove("active");
+        }
+
+        // Alternar entre claro y oscuro al hacer clic en el switch
+        switchElement.addEventListener("click", () => {
+            const isDarkModeEnabled = document.body.classList.toggle(darkModeClass);
+            header.classList.toggle("dark-header");
+            switchElement.classList.toggle("active");
+
+            // Guardar la preferencia del usuario en localStorage
+            if (isDarkModeEnabled) {
+                localStorage.setItem("darkMode", "enabled");
+            } else {
+                localStorage.setItem("darkMode", "disabled");
+            }
+        });
+    });
+
     </script>
 
     <script src="{% static 'webapp/js/main.js' %}"></script>
