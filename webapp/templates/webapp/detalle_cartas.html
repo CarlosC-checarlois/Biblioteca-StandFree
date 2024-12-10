@@ -1,0 +1,152 @@
+{% extends "cabezal.html" %}
+
+{% block cargar_static %}
+    {% load static %}
+{% endblock %}
+
+{% block titulo_pagina %}
+<title>Detalles de {{ carta.carNombre }}</title>
+<meta name="description" content="Detalles del producto {{ carta.carNombre }}. {{ carta.carDescripcion }}">
+{% endblock %}
+{% block css_archivos %}
+    <style>
+        /* Estilo del Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro */
+            display: flex; /* Flexbox para centrar */
+            justify-content: center; /* Centrar horizontalmente */
+            align-items: center; /* Centrar verticalmente */
+        }
+
+        .modal-content-wrapper {
+            max-width: 80%;
+            max-height: 80%;
+        }
+
+        .modal-content {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-wsp {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 25px;
+            right: 25px;
+            background: #fff;
+            color: #FFF;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 35px;
+            box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            transition: all 300ms ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-wsp:hover {
+            background: #d0ffd9;
+        }
+
+        .btn-wsp img {
+            width: 100%; /* Hace que la imagen ocupe todo el ancho del contenedor */
+            height: 100%; /* Hace que la imagen ocupe toda la altura del contenedor */
+            object-fit: cover; /* Ajusta la imagen para llenar completamente el contenedor sin distorsionar */
+            border-radius: 50%; /* Mantiene el borde redondeado de la imagen */
+        }
+
+        @media only screen and (min-width: 320px) and (max-width: 768px) {
+            .btn-wsp {
+                width: 63px;
+                height: 63px;
+            }
+
+            .btn-wsp img {
+                width: 100%; /* Ajusta el tamaño para que llene el nuevo tamaño del botón */
+                height: 100%; /* Ajusta el tamaño para que llene el nuevo tamaño del botón */
+            }
+        }
+
+    </style>
+{% endblock %}
+{% block contenido_pagina %}
+<main id="page-content">
+    <div id="product-container">
+        <h1 id="product-title">{{ carta.carNombre }}</h1>
+
+        <div id="product-detail">
+            <!-- Imagen del producto -->
+            <img id="product-image" src="{% static 'webapp/images/cartas/latte_carta.png' %}" alt="{{ carta.carNombre }}" onclick="openModal('{% static 'webapp/images/cartas/latte_carta.png' %}')">
+
+            <!-- Información del producto -->
+            <div id="product-info">
+                <p><strong>Código:</strong> {{ carta.carCodigo }}</p>
+                <p><strong>Nombre:</strong> {{ carta.carNombre }}</p>
+                <p><strong>Categoría:</strong> {{ carta.carCategoria }}</p>
+                <p><strong>Descripción:</strong> {{ carta.carDescripcion }}</p>
+                <p><strong>Precio:</strong> ${{ carta.carPrecio }}</p>
+                <p><strong>Estado:</strong> Disponible</p>
+
+                <div id="book-buttons">
+                    <a href="{% url 'index_cartas' %}" class="boton" style="text-decoration: none;">Volver</a>
+                    <button class="boton boton-comprar" onclick="addToCart('{{ carta.carCodigo }}')">Comprar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Modal para imagen ampliada -->
+<div id="imageModal-standfree" class="modal">
+    <span id="modal-close-btn" class="close" onclick="closeModal()">&times;</span>
+    <div class="modal-content-wrapper">
+        <img class="modal-content" id="expandedImage-standfree">
+    </div>
+</div>
+{% endblock %}
+
+{% block jvscript_archivos_defer %}
+<script>
+    // Función para abrir el modal con la imagen seleccionada
+    function openModal(imageSrc) {
+        const modal = document.getElementById('imageModal-standfree');
+        const expandedImage = document.getElementById('expandedImage-standfree');
+        expandedImage.src = imageSrc;
+        modal.style.display = 'flex';
+    }
+
+    // Función para cerrar el modal
+    function closeModal() {
+        const modal = document.getElementById('imageModal-standfree');
+        modal.style.display = 'none';
+    }
+
+    // Función para agregar el producto al carrito
+    function addToCart(carCodigo) {
+        const url = `/carrito/agregar/${carCodigo}/carta/`;
+        window.location.href = url; // Redirigir al URL generado
+    }
+</script>
+{% endblock %}

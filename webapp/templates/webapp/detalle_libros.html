@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block titulo_pagina %}
-    <title>Catálogo de Libros - Biblioteca Cafetería</title>
+    <title>Detalles del Libro - {{ libro.libNombre }}</title>
 {% endblock %}
 {% block css_archivos %}
     <style>
@@ -90,90 +90,47 @@
     </style>
 {% endblock %}
 {% block contenido_pagina %}
-    <!-- Sección de Introducción -->
-    <section class="hscero">
-        <video
-                src="{% static 'webapp/videos/Libros_Video.mp4' %}"
-                autoplay
-                loop
-                muted
-                playsinline
-                class="video-inicio"
-                style="width: 100%; max-height: 500px; object-fit: cover; border-radius: 8px;">
-        </video>
-        <p class="p_hero">
-            Te presentamos nuestro catálogo de libros. Explora una amplia variedad mientras disfrutas de un delicioso
-            café.
-        </p>
-    </section>
+    <br><br><br><br>
+    <main id="book-main-container">
+        <div id="book-container">
+            <h1 id="book-title">{{ libro.libNombre }}</h1>
 
-    <!-- Sección de Catálogo de Libros -->
-    <section class="catalogo">
-        <h2 class="vision_h2_span">Catálogo de Libros</h2>
-        <p>
-            Disfruta de nuestra selección especial de libros, perfectas para acompañar tus pedidos.
-        </p>
+            <div id="book-detail">
+                <!-- Imagen del producto -->
+                <img
+                        src="{% static 'webapp/images/libros/el_principito.png' %}"
+                        alt="{{ libro.libNombre }}"
+                        class="book-thumb"
+                        id="book-image"
+                        onclick="openModal('{% static 'webapp/images/libros/el_principito.png' %}')"
+                >
+                <div id="book-info">
+                    <p id="book-code"><strong>Código:</strong> {{ libro.libCodigo }}</p>
+                    <p id="book-name"><strong>Nombre:</strong> {{ libro.libNombre }}</p>
+                    <p id="book-author"><strong>Autor:</strong> {{ libro.libAutor }}</p>
+                    <p id="book-publication-date"><strong>Fecha de Publicación:</strong> {{ libro.libFechaPublicacion }}
+                    </p>
+                    <p id="book-volume"><strong>Volumen:</strong> {{ libro.libVolumen }}</p>
+                    <p id="book-synopsis"><strong>Sinopsis:</strong> {{ libro.libDescripcion }}</p>
+                    <p id="book-format"><strong>Formato:</strong> {{ libro.libFormato }}</p>
+                    <p id="book-price"><strong>Precio:</strong> ${{ libro.libPrecio }}</p>
+                    <p id="book-status"><strong>Estado:</strong> {{ libro.libEstado }}</p>
 
-        <div class="search-bar">
-            <input
-                    type="text"
-                    id="search-input"
-                    placeholder="Buscar producto..."
-                    aria-label="Buscar producto"
-                    value="{{ search_query|default:'' }}"
-            />
-            <select id="search-type" aria-label="Tipo de búsqueda">
-                <option value="nombre" {% if search_type == 'nombre' %}selected{% endif %}>Nombre</option>
-                <option value="precio" {% if search_type == 'precio' %}selected{% endif %}>Precio</option>
-                <option value="categoria" {% if search_type == 'categoria' %}selected{% endif %}>Categoría</option>
-            </select>
-            <button id="search-button" onclick="handleSearch()">Buscar</button>
-            <button id="reset-button" onclick="handleReset()">Restablecer</button>
+                    <div id="book-buttons">
+                        <a href="{% url 'index_libros' %}" id="button-more-info" class="boton">Volver</a>
+                        <button class="boton" onclick="addToCart('{{ libro.libCodigo }}')" id="button-buy">Comprar</button>
+                    </div>
+                </div>
+            </div>
         </div>
-
-
-        <!-- Lista de Libros -->
-        <ul class="book-list">
-            {% if libros %}
-                {% for libro in libros %}
-                    <li class="book-item" data-libro-id="{{ libro.libCodigo }}">
-                        <!-- Imagen del libro o imagen por defecto -->
-                        <img
-                                src="{% static 'webapp/images/libros/el_principito.png' %}"
-                                alt="{{ libro.libNombre }}"
-                                class="book-thumb"
-                                style="width: 10%; height: 40%; padding-right: 2%;"
-                                onclick="openModal('{% static 'webapp/images/libros/el_principito.png' %}')"
-                        >
-                        <div class="menu-details">
-                            <h3>{{ libro.libNombre }}</h3>
-                            <p>Autor: {{ libro.libAutor }}</p>
-                            <p>Fecha de Publicación: {{ libro.libFechaPublicacion }}</p>
-                            <p>Precio: ${{ libro.libPrecio }}</p>
-                            <div class="book-details">
-                                <a href="{% url 'detalle_libro' libro.libCodigo %}" class="boton"
-                                   style="text-decoration: none;">Ver más</a>
-                                <button class="boton" onclick="addToCart('{{ libro.libCodigo }}')">Comprar</button>
-                            </div>
-                        </div>
-                    </li>
-                {% endfor %}
-            {% else %}
-                <p class="no-products">No hay libros disponibles en este momento.</p>
-            {% endif %}
-        </ul>
-    </section>
+    </main>
 
     <!-- Modal para imagen ampliada -->
     <div id="imageModal-standfree" class="modal">
         <span id="modal-close-btn" class="close" onclick="closeModal()">&times;</span>
-        <div class="modal-content-wrapper">
-            <img class="modal-content" id="expandedImage-standfree">
-        </div>
+        <img class="modal-content" id="expandedImage-standfree">
     </div>
-
 {% endblock %}
-
 {% block jvscript_archivos_defer %}
     <script>
         // Función para abrir el modal con la imagen seleccionada
@@ -237,48 +194,6 @@
             // Ejecutar al redimensionar la ventana
             window.addEventListener("resize", actualizarCarrito);
         });
-
-
-        document.addEventListener("DOMContentLoaded", () => {
-            const searchInput = document.getElementById("search-input");
-            const searchButton = document.getElementById("search-button");
-            const resetButton = document.getElementById("reset-button");
-
-            // Inicializar estado de los botones
-            updateButtonVisibility();
-
-            // Función para actualizar la visibilidad del botón "Restablecer"
-            function updateButtonVisibility() {
-                if (searchInput.value.trim() !== "") {
-                    resetButton.style.display = "inline-block"; // Mostrar "Restablecer"
-                } else {
-                    resetButton.style.display = "none"; // Ocultar "Restablecer"
-                }
-            }
-
-            // Evento para el input de búsqueda
-            searchInput.addEventListener("input", updateButtonVisibility);
-
-            // Manejador del botón "Buscar"
-            window.handleSearch = () => {
-                const query = searchInput.value.trim();
-                const type = document.getElementById("search-type").value;
-
-                if (query) {
-                    const url = `${window.location.pathname}?search=${query}&type=${type}`;
-                    window.location.href = url; // Redirigir con parámetros de búsqueda
-                }
-            };
-
-            // Manejador del botón "Restablecer"
-            window.handleReset = () => {
-                searchInput.value = ""; // Limpiar el input
-                resetButton.style.display = "none"; // Ocultar "Restablecer"
-                window.location.href = window.location.pathname; // Recargar sin filtros
-            };
-        });
-
-
     </script>
 
     <script src="{% static 'webapp/js/main.js' %}"></script>

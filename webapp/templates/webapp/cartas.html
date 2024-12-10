@@ -120,13 +120,15 @@
                     id="search-input"
                     placeholder="Buscar producto..."
                     aria-label="Buscar producto"
+                    value="{{ search_query|default:'' }}"
             />
             <select id="search-type" aria-label="Tipo de búsqueda">
-                <option value="nombre">Nombre</option>
-                <option value="precio">Precio</option>
-                <option value="categoria">Categoría</option>
+                <option value="nombre" {% if search_type == 'nombre' %}selected{% endif %}>Nombre</option>
+                <option value="precio" {% if search_type == 'precio' %}selected{% endif %}>Precio</option>
+                <option value="categoria" {% if search_type == 'categoria' %}selected{% endif %}>Categoría</option>
             </select>
-            <button onclick="filtrarProductos()">Buscar</button>
+            <button id="search-button" onclick="handleSearch()">Buscar</button>
+            <button id="reset-button" onclick="handleReset()">Restablecer</button>
         </div>
         <div class="input-hint">
             Ingrese un valor a buscar en el campo de arriba y seleccione el tipo de búsqueda.
@@ -154,8 +156,8 @@
                             <p>{{ producto.carDescripcion }}</p>
                             <p>Precio: ${{ producto.carPrecio }}</p>
                             <div class="actions">
-                                <!-- Botón de Ver Más -->
-                                <button class="boton">Ver más</button>
+                                <a href="{% url 'detalle_carta' producto.carCodigo %}" class="boton"
+                                   style="text-decoration: none;">Ver más</a>
                                 <button class="boton" onclick="addToCart('{{ producto.carCodigo }}')">Comprar</button>
                             </div>
                         </div>
@@ -216,32 +218,45 @@
         }
 
         document.addEventListener("DOMContentLoaded", () => {
-            const carritoTexto = document.querySelector(".carrito-texto");
-            const carritoIcono = document.querySelector(".carrito-icono");
+            const searchInput = document.getElementById("search-input");
+            const searchType = document.getElementById("search-type");
+            const searchButton = document.getElementById("search-button");
+            const resetButton = document.getElementById("reset-button");
 
-            function actualizarCarrito() {
-                const anchoVentana = window.innerWidth;
+            // Manejador para buscar
+            window.handleSearch = () => {
+                const query = searchInput.value.trim();
+                const type = searchType.value;
 
-                if (anchoVentana <= 550) {
-                    carritoTexto.style.display = "none"; // Ocultar texto en pantallas muy pequeñas
-                    carritoIcono.style.display = "flex"; // Mostrar ícono
-                } else if (anchoVentana > 550 && anchoVentana <= 992) {
-                    carritoTexto.style.display = "inline-block"; // Mostrar texto en pantallas medianas
-                    carritoIcono.style.display = "none"; // Ocultar ícono
+                if (query) {
+                    const url = `${window.location.pathname}?search=${query}&type=${type}`;
+                    window.location.href = url; // Redirigir con parámetros de búsqueda
+                }
+            };
+
+            // Manejador para restablecer
+            window.handleReset = () => {
+                searchInput.value = ""; // Limpiar campo de búsqueda
+                resetButton.style.display = "none"; // Ocultar botón "Restablecer"
+                window.location.href = window.location.pathname; // Recargar sin parámetros
+            };
+
+            // Mostrar u ocultar el botón "Restablecer"
+            function updateResetButtonVisibility() {
+                if (searchInput.value.trim() !== "") {
+                    resetButton.style.display = "inline-block"; // Mostrar "Restablecer"
                 } else {
-                    carritoTexto.style.display = "inline-block"; // Mostrar texto en pantallas grandes
-                    carritoIcono.style.display = "none"; // Ocultar ícono
+                    resetButton.style.display = "none"; // Ocultar "Restablecer"
                 }
             }
 
-            // Ejecutar al cargar la página
-            actualizarCarrito();
+            // Inicializar estado del botón "Restablecer"
+            updateResetButtonVisibility();
 
-            // Ejecutar al redimensionar la ventana
-            window.addEventListener("resize", actualizarCarrito);
+            // Actualizar visibilidad del botón "Restablecer" cuando se edita el input
+            searchInput.addEventListener("input", updateResetButtonVisibility);
         });
     </script>
-
     <script src="{% static 'webapp/js/main.js' %}"></script>
     <script src="{% static 'webapp/js/modal.js' %}"></script>
 {% endblock %}

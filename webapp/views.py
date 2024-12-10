@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from webapp.models import *
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password
 from django.db import connection
@@ -12,7 +12,7 @@ from django.conf import settings
 from django.utils.timezone import now
 from .models import Usuario, Carrito, UsuarioXCarrito, Libro, Carta, LibrosXCarrito, CartaXCarrito
 from django.db import transaction
-
+from django.db.models import Q
 from django.db.models import F
 
 
@@ -23,21 +23,86 @@ def index(request):
 
 
 def index_cartas(request):
+    # Obtener el carrito de la sesión
     carrito = request.session.get("carrito", {})
     total_items = sum(item['cantidad'] for item in carrito.values())
-    # Obtener las cartas desde la base de datos
-    cartas = Carta.objects.all()
-    return render(request, 'webapp/cartas.html',
-                  {'productos': cartas, 'total_items': total_items, 'media_url': settings.MEDIA_URL})
 
+    # Capturamos los parámetros de búsqueda
+    search_query = request.GET.get('search', '').strip()
+    search_type = request.GET.get('type', 'nombre')  # Por defecto, buscar por nombre
 
+    # Filtro base: Cartas activas
+    cartas = Carta.objects.filter(carStatus_1='ACT')
+
+    # Aplicar filtros según el tipo de búsqueda
+    if search_query:
+        if search_type == 'nombre':
+            cartas = cartas.filter(carNombre__icontains=search_query)
+        elif search_type == 'precio':
+            try:
+                # Intentar filtrar por precio
+                cartas = cartas.filter(carPrecio=float(search_query))
+            except ValueError:
+                # Si no es un precio válido, no devolver resultados
+                cartas = Carta.objects.none()
+        elif search_type == 'categoria':
+            # Filtrar por categoría usando relaciones
+            cartas = cartas.filter(
+                Q(relcartacategoria__categoria__carxcatNombre__icontains=search_query),
+                Q(relcartacategoria__categoria__carxcatStatus='ACT')  # Solo categorías activas
+            )
+
+    # Renderizar el template
+    return render(
+        request,
+        'webapp/cartas.html',
+        {
+            'productos': cartas,
+            'total_items': total_items,
+            'search_query': search_query,
+            'search_type': search_type,
+            'media_url': settings.MEDIA_URL,
+        },
+    )
 def index_libros(request):
+    # Obtener el carrito de la sesión
     carrito = request.session.get("carrito", {})
     total_items = sum(item['cantidad'] for item in carrito.values())
-    libros = Libro.objects.all()
-    print(libros)
-    return render(request, 'webapp/libros.html',
-                  {'libros': libros, 'total_items': total_items, 'media_url': settings.MEDIA_URL})
+
+    # Capturamos los parámetros de búsqueda
+    search_query = request.GET.get('search', '').strip()  # Eliminar espacios en blanco adicionales
+    search_type = request.GET.get('type', 'nombre')  # Tipo de búsqueda (por defecto 'nombre')
+
+    # Filtro base: Libros activos
+    libros = Libro.objects.filter(libStatus=True)
+
+    # Aplicamos los filtros según el tipo de búsqueda
+    if search_query:
+        if search_type == 'nombre':
+            libros = libros.filter(libNombre__icontains=search_query)  # Buscar por nombre (contiene)
+        elif search_type == 'precio':
+            try:
+                libros = libros.filter(libPrecio=float(search_query))  # Buscar por precio exacto
+            except ValueError:
+                libros = Libro.objects.none()  # No mostrar resultados si el precio no es válido
+        elif search_type == 'categoria':
+            # Filtrar libros asociados a la categoría
+            libros = libros.filter(
+                librosxlibreriacategoria__categoria__libxcatNombre__icontains=search_query
+            )
+
+    # Renderizar el template con el contexto
+    return render(
+        request,
+        'webapp/libros.html',
+        {
+            'libros': libros,  # Lista de libros filtrada
+            'total_items': total_items,  # Total de ítems en el carrito
+            'search_query': search_query,  # Texto buscado
+            'search_type': search_type,  # Tipo de búsqueda seleccionado
+            'media_url': settings.MEDIA_URL,  # URL para los archivos de medios
+        },
+    )
 
 
 def index_contacto(request):
@@ -329,3 +394,30 @@ def finalizar_compra(request):
             return JsonResponse({"success": False, "error": str(e)})
     else:
         return JsonResponse({"success": False, "error": "Usuario no autenticado o método inválido."})
+
+
+def detalle_libro(request, libro_codigo):
+    # Buscar el libro en la base de datos
+    libro = get_object_or_404(Libro, libCodigo=libro_codigo)
+    carrito = request.session.get("carrito", {})
+    total_items = sum(item['cantidad'] for item in carrito.values())
+
+    # Renderizar el template con los detalles del libro
+    return render(request, 'webapp/detalle_libros.html', {
+        'libro': libro,
+        'total_items': total_items
+    })
+
+
+def detalle_carta(request, carCodigo):
+    # Obtener la carta basada en el código único
+    carta = get_object_or_404(Carta, carCodigo=carCodigo)
+
+    # Datos del carrito (si existen)
+    total_items = sum(item['cantidad'] for item in request.session.get("carrito", {}).values())
+
+    # Renderizar el template de detalle
+    return render(request, 'webapp/detalle_cartas.html', {
+        'carta': carta,
+        'total_items': total_items,
+    })

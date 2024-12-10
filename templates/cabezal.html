@@ -126,7 +126,6 @@
                 {% else %}
                     <li class="px-2"><a class="nav-link" href="{% url 'index_libros' %}">Libros</a></li>
                     <li class="px-2"><a class="nav-link" href="{% url 'index_cartas' %}">Carta</a></li>
-                    <li class="px-2"><a class="nav-link" href="{% url 'index_contacto' %}">Contacto</a></li>
                     <li class="px-2 carrito-container">
                         <!-- Texto "Carrito" -->
                         <a href="{% url 'index_carrito' %}" class="nav-link carrito-texto">Carrito</a>
@@ -138,6 +137,7 @@
                     </span>
                         </a>
                     </li>
+                    <li class="px-2"><a class="nav-link" href="{% url 'index_contacto' %}">Contacto</a></li>
                     <li class="px-2"><a class="nav-link" href="{% url 'index_login' %}">Login</a></li>
                 {% endif %}
             </ul>
