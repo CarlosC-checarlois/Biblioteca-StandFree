@@ -312,6 +312,55 @@
             // Ejecutar al redimensionar la ventana
             window.addEventListener("resize", actualizarCarrito);
         });
+
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById("registerForm");
+            const fields = [
+                "nombre",
+                "apellido",
+                "nacimiento",
+                "genero",
+                "telefono",
+                "email",
+                "usuario",
+                "contraseña",
+                "confirmar_contraseña",
+            ];
+
+            // Recuperar datos del sessionStorage
+            fields.forEach((field) => {
+                const input = document.getElementById(field);
+                if (input && sessionStorage.getItem(field)) {
+                    input.value = sessionStorage.getItem(field);
+                }
+            });
+
+            // Guardar datos en sessionStorage al cambiar
+            form.addEventListener("input", () => {
+                fields.forEach((field) => {
+                    const input = document.getElementById(field);
+                    if (input) {
+                        sessionStorage.setItem(field, input.value);
+                    }
+                });
+            });
+
+            // Limpiar sessionStorage al enviar el formulario
+            form.addEventListener("submit", () => {
+                fields.forEach((field) => {
+                    sessionStorage.removeItem(field);
+                });
+            });
+
+            // Opcional: limpiar sessionStorage al resetear el formulario
+            form.addEventListener("reset", () => {
+                fields.forEach((field) => {
+                    sessionStorage.removeItem(field);
+                });
+            });
+        });
+
     </script>
     <script src="{% static 'webapp/js/main.js' %}"></script>
     <script src="{% static 'webapp/js/modal.js' %}"></script>
