@@ -1,13 +1,9 @@
-import re
-from http.client import HTTPResponse
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from webapp.models import *
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.contrib.auth.hashers import make_password
-from django.db import connection
 from django.conf import settings
 from django.utils.timezone import now
 from .models import Usuario, Carrito, UsuarioXCarrito, Libro, Carta, LibrosXCarrito, CartaXCarrito

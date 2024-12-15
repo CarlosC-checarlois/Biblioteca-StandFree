@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from os import getenv
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +26,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", '212q3515')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS",'*')
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", '*')
 
 # Application definition
 
@@ -83,6 +84,9 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+DATABASES["default"] = dj_database_url.parse(
+    "postgresql://biblioteca:YO722fecHNYnEzlXyhhdHKJqhryV1VCU@dpg-cte5iltds78s739j4rc0-a/bibliotecastandfree")
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
