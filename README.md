@@ -1,138 +1,168 @@
-# StandFree: Cafetería-Librería Web Prototype
+# ☕📚 **StandFree: Plataforma Web de Cafetería-Librería**
 
-StandFree es una plataforma web que combina la experiencia cultural de una cafetería con el mundo literario. Este prototipo busca ofrecer una experiencia visual atractiva y funcional, implementada con Django para el backend y tecnologías modernas como HTML, CSS y JavaScript para el frontend.
+**StandFree** es una plataforma web que fusiona el ambiente acogedor de una **cafetería** con el mundo **literario**. Permite a los usuarios explorar productos gastronómicos y literarios, con un diseño atractivo y funcional. Está construida con tecnologías modernas como **Django** para el backend y **HTML5**, **CSS3** y **JavaScript** para el frontend.
 
 ---
 
-## Descripción del Proyecto
+## 🛠 **Descripción del Proyecto**  
 
 StandFree permite a los usuarios explorar productos gastronómicos y literarios, integrando funcionalidades básicas de navegación, visualización de productos y un carrito de compras estático. El proyecto se centra en la creación de un prototipo funcional y escalable, con un diseño adaptativo que brinda una experiencia fluida en múltiples plataformas.
 
 ---
 
-## Características Principales
+## 🌟 **Características Principales**
 
-### Frontend:
+### 🎨 **Frontend**  
 - **Interfaz visual dinámica:**
-  - Diseño atractivo y consistente, basado en HTML y CSS.
-  - Interacciones básicas con JavaScript, incluyendo un modo oscuro y modales.
+  - Diseño atractivo y consistente, basado en **HTML5** y **CSS3**.
+  - Interacciones básicas con **JavaScript**, incluyendo un modo oscuro y modales interactivos.
 - **Búsqueda de productos:**
   - Barra de búsqueda con filtros por nombre, precio o categoría.
 - **Diseño responsivo:**
   - Adaptabilidad garantizada para dispositivos móviles y escritorios.
 
-### Backend:
+### ⚙️ **Backend**  
+- **Framework Django:**
+   - Creación y gestión de rutas y vistas dinámicas.  
+   - Modelos de datos para libros, productos gastronómicos, categorías y carrito de compras.
 - **Base de datos relacional:**
-  - Modelos definidos en Django para gestionar libros, productos gastronómicos, categorías y carrito de compras.
+   - **SQLite** para desarrollo local (fácil de migrar a **PostgreSQL** o **MySQL**).
 - **Integración dinámica:**
-  - Conexión entre vistas y modelos para mostrar datos en tiempo real.
-- **Soporte para productos múltiples:**
-  - Gestión de libros y carta gastronómica con detalles personalizados.
+   - Conexión entre vistas y modelos para mostrar datos en tiempo real.
 
 ---
 
-## Estructura del Proyecto
+## 📂 **Estructura del Proyecto**
 
+```plaintext
 StandFree/
-│
-├── webapp/
-│   ├── migrations/         # Archivos de migración de la base de datos
-│   ├── static/
-│   │   ├── css/            # Archivos de estilo CSS
-│   │   ├── images/         # Imágenes del frontend
-│   │   ├── js/             # Archivos JavaScript
-│   │   └── videos/         # Videos utilizados en el proyecto
-│   ├── templates/
-│   │   ├── cabezal.html    # Plantilla base
-│   │   ├── libros.html     # Página de libros
-│   │   ├── cartas.html     # Página de la carta
-│   │   ├── contacto.html   # Página de contacto
-│   │   └── panel.html      # Panel de usuario
-│   ├── models.py           # Modelos de la base de datos
-│   ├── views.py            # Lógica de vistas
-│   └── urls.py             # Rutas del proyecto
-│
-├── db.sqlite3              # Base de datos SQLite (desarrollo)
-├── manage.py               # Administrador de Django
-└── README.md               # Documentación del proyecto
+|
+├── webapp/                       # Aplicación principal
+|   ├── migrations/               # Migraciones de la base de datos
+|   ├── static/                   # Archivos estáticos
+|   |   ├── css/                  # Archivos de estilo CSS
+|   |   ├── js/                   # Scripts JavaScript
+|   |   ├── images/               # Imágenes del proyecto
+|   |   ├── videos/               # Videos utilizados
+|   ├── templates/                # Plantillas HTML
+|   |   ├── base.html             # Plantilla base
+|   |   ├── cartas.html           # Página de la carta
+|   |   ├── libros.html           # Página de libros
+|   |   ├── contacto.html         # Página de contacto
+|   |   └── panel.html            # Panel de usuario
+|   ├── models.py                 # Definición de modelos de la base de datos
+|   ├── views.py                  # Vistas del proyecto
+|   └── urls.py                   # Rutas de la aplicación
+|
+├── db.sqlite3                    # Base de datos SQLite
+├── manage.py                     # Script de gestión de Django
+└── README.md                     # Documentación del proyecto
+```
 
 ---
 
-## Requisitos del Proyecto
+## ✅ **Requisitos Previos**
 
-### Tecnologías Utilizadas:
-- **Frontend:**
-  - HTML5, CSS3
-  - JavaScript
-- **Backend:**
-  - Django Framework (Python 3.9+)
-- **Base de Datos:**
-  - SQLite (desarrollo; puede migrarse a PostgreSQL o MySQL en producción)
-
-### Requisitos de Instalación:
-- Python 3.9+
-- Pip (gestor de paquetes de Python)
-- Entorno virtual recomendado (venv o similar)
+- **Python**: Versión 3.9 o superior.
+- **Pip**: Gestor de paquetes de Python.
+- **Entorno virtual** (venv).
 
 ---
 
-## Instalación
+## ⚡ **Instalación del Proyecto**
 
-1. **Clonar el Repositorio:**
-   git clone https://github.com/usuario/StandFree.git
-   cd StandFree
+### 1⃣ **Clona el Repositorio**
+```bash
+git clone https://github.com/usuario/StandFree.git
+cd StandFree
+```
 
-2. **Crear un Entorno Virtual:**
-   python -m venv venv
-   source venv/bin/activate  # Linux/MacOS
-   venv\Scripts\activate     # Windows
+### 2⃣ **Configura el Entorno Virtual**
+```bash
+python -m venv venv
+source venv/bin/activate  # Linux/MacOS
+venv\Scripts\activate     # Windows
+```
 
-3. **Instalar Dependencias:**
-   pip install -r requirements.txt
+### 3⃣ **Instala las Dependencias**
+```bash
+pip install -r requirements.txt
+```
 
-4. **Configurar la Base de Datos:**
-   python manage.py migrate
+### 4⃣ **Configura la Base de Datos**
+```bash
+python manage.py migrate
+```
 
-5. **Iniciar el Servidor:**
-   python manage.py runserver
+### 5⃣ **Inicia el Servidor**
+```bash
+python manage.py runserver
+```
 
-Accede al sitio en `http://127.0.0.1:8000/`.
-
----
-
-## Contribuciones
-
-¡Las contribuciones son bienvenidas! Si deseas colaborar:
-1. Haz un fork del repositorio.
-2. Crea una nueva rama:
-   git checkout -b feature/nueva-funcionalidad
-3. Haz commit de tus cambios:
-   git commit -m 'Añadir nueva funcionalidad'
-4. Haz push a la rama:
-   git push origin feature/nueva-funcionalidad
-5. Abre un Pull Request.
-
-### Base de datos
-Se muestra el modelo fisico de la base de datos del proyecto Biblioteca StandFree
-
-## Anexos
-
-| **Pantalla de Inicio**                                                                      | **Pantalla de Quienes Somos**                                                                                                |
-|---------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------|
-| <img src="documentacion/Base_De_Datos_PDM_BIBLIOTECA_STAND_FREE.png" alt="Pantalla de Inicio" style="max-width: 300px; height: auto;"> | <img src="documentacion/DIAGRAMA_CLASES_BIBLIOTECA_STAND_FREE.png" alt="Pantalla de Quienes Somos" style="max-width: 300px; height: auto;"> |
-
-| **Más Información**                                                                      |
-|------------------------------------------------------------------------------------------|
-| <img src="documentacion/DIAGRAMA_JVSCRIPT_FRONTEND_BIBLIOTECA_STAND_FREE.png" alt="Más Información" style="max-width: 300px; height: auto;"> |
-## Contacto
-
-Desarrollado por **Carlos Constante**.
----
-
-## Licencia
-
-Este proyecto está licenciado bajo la [MIT License](https://opensource.org/licenses/MIT).
+**🔗 Abre tu navegador y accede a:** [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
 ---
 
-¡Gracias por explorar la Biblioteca StandFree! ☕📚
+## 🧪 **Pruebas Realizadas**
+
+- **Navegación:** Verificación de enlaces y botones interactivos.
+- **Interactividad:** Funcionamiento de filtros y botones en secciones clave.
+- **Responsividad:** Compatibilidad visual en dispositivos móviles y de escritorio.
+- **Carga de Imágenes:** Optimización de tiempos de carga y tamaños.
+
+---
+
+## 🛠️ **Tecnologías Utilizadas**
+
+### **Frontend**
+- **HTML5**
+- **CSS3**
+- **JavaScript**
+
+### **Backend**
+- **Django Framework** (Python 3.9+)
+
+### **Base de Datos**
+- **SQLite** (desarrollo local)
+
+---
+
+## 🔮 **Próximos Pasos**
+
+- Implementación de autenticación de usuarios.
+- Funcionalidad completa del carrito de compras.
+- Optimización avanzada de tiempos de carga y UX/UI.
+- Migración de la base de datos a **PostgreSQL/MySQL** en producción.
+
+---
+
+## 📸 **Anexos**
+
+| **Pantalla de Inicio**                                                                      | **Diagrama de Clases**                                                                 |
+|--------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|
+| ![Pantalla de Inicio](documentacion/Base_De_Datos_PDM_BIBLIOTECA_STAND_FREE.png)           | ![Diagrama de Clases](documentacion/DIAGRAMA_CLASES_BIBLIOTECA_STAND_FREE.png)        |
+
+| **Más Información**                                                                        |
+|--------------------------------------------------------------------------------------------|
+| ![Diagrama JavaScript](documentacion/DIAGRAMA_JVSCRIPT_FRONTEND_BIBLIOTECA_STAND_FREE.png) |
+
+---
+
+## 🤝 **Contribuciones**
+
+¡Las contribuciones por el momento no estan disponibles !
+
+---
+
+## 📧 **Contacto**
+
+- **Desarrollador:** Carlos Constante
+---
+
+## 📜 **Licencia**
+
+Este proyecto está licenciado bajo la **MIT License**. Consulta el archivo `LICENSE` para más detalles.
+
+---
+
+🎉 ¡**Gracias por explorar la Biblioteca StandFree!** ☕📚
