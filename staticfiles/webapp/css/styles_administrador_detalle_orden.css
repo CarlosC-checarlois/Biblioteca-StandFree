@@ -1,0 +1,126 @@
+.detail-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #f8f5e8; /* Color cálido relacionado con una cafetería */
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+}
+
+.detail-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.detail-header h2 {
+    font-size: 28px;
+    color: #6c4a27; /* Marrón café */
+    font-weight: bold;
+}
+
+.detail-header p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #5c4033; /* Marrón claro */
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 20px 0 10px;
+    color: #6c4a27;
+    display: flex;
+    align-items: center;
+}
+
+.section-title i {
+    margin-right: 10px;
+    color: #a67c52; /* Marrón más cálido */
+}
+
+table {
+    width: 100%;
+    margin-top: 10px;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #e0d7c6; /* Color suave */
+}
+
+th {
+    background-color: #a67c52; /* Marrón café */
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f1e9db; /* Fondo claro */
+}
+
+tr:hover {
+    background-color: #e8d6c3; /* Hover más oscuro */
+}
+
+.no-data {
+    text-align: center;
+    color: #a67c52;
+    font-weight: bold;
+    padding: 20px;
+    background: #fffbe6; /* Fondo cálido */
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.btn-back {
+    display: inline-block;
+    margin-top: 20px;
+    text-decoration: none;
+    background: #6c4a27; /* Marrón café */
+    color: #fff;
+    padding: 12px 25px;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+    text-align: center;
+    font-weight: bold;
+}
+
+.btn-back:hover {
+    background: #8a6340; /* Marrón más claro */
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .detail-container {
+        padding: 15px;
+    }
+
+    .detail-header h2 {
+        font-size: 24px;
+    }
+
+    .detail-header p {
+        font-size: 14px;
+    }
+
+    .section-title {
+        font-size: 18px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+
+    .btn-back {
+        padding: 10px 20px;
+    }
+}

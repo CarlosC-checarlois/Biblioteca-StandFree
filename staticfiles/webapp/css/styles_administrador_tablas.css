@@ -1,0 +1,93 @@
+/* General Styles for Table Container */
+.table-container {
+    margin: 20px auto;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Table Wrapper */
+.table-responsive {
+    overflow-x: auto; /* Add horizontal scroll */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on touch devices */
+    border-radius: 8px;
+}
+
+/* Table Styles */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    text-align: left;
+    padding: 12px 10px;
+}
+
+.table th {
+    background-color: #f8c14d;
+    color: #333333;
+    font-weight: bold;
+    white-space: nowrap;
+    text-transform: uppercase;
+    border-bottom: 2px solid #d0a020;
+}
+
+.table td {
+    border-bottom: 1px solid #dddddd;
+}
+
+/* Highlight Rows */
+.table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Icon Styles for Actions */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.action-buttons a {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 16px;
+    transition: all 0.3s ease-in-out;
+}
+
+.action-buttons a:hover {
+    opacity: 0.8;
+}
+
+.action-buttons .btn-warning {
+    background-color: #ffc107;
+}
+
+.action-buttons .btn-danger {
+    background-color: #dc3545;
+}
+
+/* Add Scroll to Table for Small Screens */
+@media (max-width: 768px) {
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .table-container {
+        padding: 10px;
+    }
+
+    .table th,
+    .table td {
+        padding: 8px;
+        font-size: 14px;
+    }
+}
