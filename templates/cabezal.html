@@ -85,6 +85,120 @@
             color: #343a40 !important;
         }
     </style>
+    <style>
+        /* Contenedor de mensajes flotantes */
+        .floating-messages-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            max-width: 320px;
+            font-family: 'Georgia', serif; /* Fuente más amigable */
+        }
+
+        /* Estilo base para los mensajes */
+        .floating-message {
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(to bottom, #fff9f0, #fff3e6); /* Fondo cálido */
+            opacity: 0; /* Por defecto invisible */
+            transform: translateY(-20px); /* Posición inicial para animación */
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            border: 1px solid #d6ccc2; /* Borde suave */
+        }
+
+
+        /* Animación de entrada (fade-in) */
+        .floating-message.fade-in {
+            opacity: 1;
+            transform: translateY(0); /* Volver a la posición original */
+        }
+
+        /* Animación de salida (fade-out) */
+        .floating-message.fade-out {
+            opacity: 0;
+            transform: translateY(-20px); /* Desplazar hacia arriba al salir */
+        }
+
+        .floating-message-success {
+            background: linear-gradient(to bottom, #fbeec1, #f5d19a); /* Gradiente cálido estilo cafetería */
+            color: #5c3d2e; /* Texto en marrón oscuro */
+            border: 1px solid #e5b887; /* Borde marrón suave */
+            box-shadow: 0px 4px 6px rgba(92, 61, 46, 0.3); /* Sombra para dar profundidad */
+        }
+
+        /* Efecto hover para el mensaje de éxito */
+        .floating-message-success:hover {
+            background: linear-gradient(to bottom, #f5d19a, #fbeec1); /* Invertir el gradiente al pasar */
+            box-shadow: 0px 6px 10px rgba(92, 61, 46, 0.5); /* Aumentar la sombra al pasar */
+        }
+
+        .floating-message-error {
+            background: linear-gradient(to bottom, #fce4e4, #f8b8b8); /* Gradiente de tonos rosados suaves */
+            color: #8b1e24; /* Texto en un rojo marrón oscuro */
+            border: 1px solid #e78d8d; /* Borde rojo suave */
+            box-shadow: 0px 4px 6px rgba(139, 30, 36, 0.3); /* Sombra para dar profundidad */
+            font-family: 'Arial', sans-serif; /* Fuente profesional */
+            padding: 15px;
+            border-radius: 8px; /* Bordes más redondeados */
+            animation: shake 0.3s ease-in-out; /* Animación de sacudida suave */
+        }
+
+        /* Hover Effect */
+        .floating-message-error:hover {
+            background: linear-gradient(to bottom, #f8b8b8, #fce4e4); /* Invertir gradiente al pasar */
+            box-shadow: 0px 6px 10px rgba(139, 30, 36, 0.5); /* Aumentar la sombra */
+        }
+
+        .floating-message-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        .floating-message-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        /* Botón de cierre */
+        .floating-message .close-btn {
+            margin-left: 15px;
+            color: inherit;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 1;
+            background: none;
+            border: none;
+        }
+
+        .floating-message .close-btn:hover {
+            opacity: 0.7;
+        }
+
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-5px);
+            }
+            50% {
+                transform: translateX(5px);
+            }
+            75% {
+                transform: translateX(-5px);
+            }
+        }
+    </style>
     {% block sobreescribir_jvscript_archivos %}
         <script src="{% static 'webapp/js/modal.js' %}"></script>
         {% block jvscript_archivos %}
@@ -106,24 +220,31 @@
         <nav class="nav" id="nav">
             <button class="cerrar-menu" id="cerrar"><i class="bi bi-x"></i></button>
             <ul class="nav-list d-flex list-unstyled mb-0">
-                <li class="px-2"><a class="nav-link" href="{% url 'index' %}">Inicio</a></li>
                 {% if user.is_authenticated %}
-                    <li class="px-2"><a class="nav-link" href="{% url 'index_libros' %}">Libros</a></li>
-                    <li class="px-2"><a class="nav-link" href="{% url 'index_cartas' %}">Carta</a></li>
-                    <li class="px-2 carrito-container">
-                        <!-- Texto "Carrito" -->
-                        <a href="{% url 'index_carrito' %}" class="nav-link carrito-texto">Carrito</a>
-                        <!-- Ícono del carrito con contador -->
-                        <a href="{% url 'index_carrito' %}" class="carrito-icono">
-                            <i class="bi bi-cart-fill fs-4"></i>
-                            <span id="cart-count" class="badge bg-danger">
-                        {% if total_items %}{{ total_items }}{% else %}0{% endif %}
-                    </span>
-                        </a>
-                    </li>
-                    <li class="px-2"><a class="nav-link" href="{% url 'index_panel' %}">Panel</a></li>
+                    {% if not user.is_staff %}
+                        <li class="px-2"><a class="nav-link" href="{% url 'index' %}">Inicio</a></li>
+                        <li class="px-2"><a class="nav-link" href="{% url 'index_libros' %}">Libros</a></li>
+                        <li class="px-2"><a class="nav-link" href="{% url 'index_cartas' %}">Carta</a></li>
+                        <li class="px-2 carrito-container">
+                            <!-- Texto "Carrito" -->
+                            <a href="{% url 'index_carrito' %}" class="nav-link carrito-texto">Carrito</a>
+                            <!-- Ícono del carrito con contador -->
+                            <a href="{% url 'index_carrito' %}" class="carrito-icono">
+                                <i class="bi bi-cart-fill fs-4"></i>
+                                <span id="cart-count" class="badge bg-danger">
+                            {% if total_items %}{{ total_items }}{% else %}0{% endif %}
+                        </span>
+                            </a>
+                        </li>
+                        <li class="px-2"><a class="nav-link" href="{% url 'index_panel_usuario' %}">Panel</a></li>
+                    {% else %}
+                        <li class="px-2"><a class="nav-link" href="{% url 'index_panel_administrador' %}">Panel
+                            Administrador</a></li>
+                    {% endif %}
                     <li class="px-2"><a class="nav-link" href="{% url 'index_logout' %}">Salir</a></li>
                 {% else %}
+                    <li class="px-2"><a class="nav-link" href="{% url 'index' %}">Inicio</a></li>
+
                     <li class="px-2"><a class="nav-link" href="{% url 'index_libros' %}">Libros</a></li>
                     <li class="px-2"><a class="nav-link" href="{% url 'index_cartas' %}">Carta</a></li>
                     <li class="px-2 carrito-container">
@@ -168,6 +289,34 @@
             });
         </script>
     {% endblock %}
+    {% comment %}
+        Mensajes flotantes
+    {% endcomment %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const floatingMessages = document.querySelectorAll(".floating-message");
+
+            floatingMessages.forEach((message) => {
+                // Animación de entrada (fade-in) al cargar el mensaje
+                setTimeout(() => {
+                    message.classList.add("fade-in");
+                }, 100); // Retraso mínimo para garantizar que la animación se vea
+
+                // Animación de salida (fade-out) después de 3 segundos
+                setTimeout(() => {
+                    message.classList.remove("fade-in");
+                    message.classList.add("fade-out"); // Aplicar clase de salida
+
+                    // Eliminar completamente el mensaje después de la animación de salida
+                    setTimeout(() => {
+                        message.remove();
+                    }, 500); // 500 ms coincide con la duración de la transición CSS
+                }, 3000); // Mostrar el mensaje durante 3 segundos antes de iniciar la salida
+            });
+        });
+    </script>
+
+
     {% block css_archivos_defer %}
     {% endblock %}
     {% block imagenes_flotantes %}
@@ -177,4 +326,17 @@
     {% endblock %}
     </body>
 {% endblock %}
+
+{% if messages %}
+    <div class="floating-messages-container" id="floatingMessages">
+        {% for message in messages %}
+            <div class="floating-message floating-message-{{ message.tags }}" role="alert">
+                {{ message }}
+                <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+
 </html>

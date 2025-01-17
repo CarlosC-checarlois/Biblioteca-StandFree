@@ -19,12 +19,13 @@ class Libro(models.Model):
     libCodigo = models.CharField(max_length=7, primary_key=True)  # Código único del libro
     libNombre = models.CharField(max_length=150)  # Nombre del libro
     libAutor = models.CharField(max_length=150)  # Autor del libro
+    libCantidad = models.IntegerField() # Cantidad de Libro
     libFechaPublicacion = models.DateField()  # Fecha de publicación
     libVolumen = models.IntegerField()  # Volumen del libro
     libSinopsis = models.TextField()  # Sinopsis del libro
     libURLLibro = models.URLField(blank=True, null=True)  # URL del libro (opcional)
     libFoto = models.ImageField(upload_to='libros/')  # Imagen del libro
-    libStatus = models.BooleanField(default=True)  # Estado (activo/inactivo)
+    libStatus = models.CharField(max_length=3, default="ACT")
     libPrecio = models.DecimalField(max_digits=9, decimal_places=2, null=True, blank=True)
 
     def __str__(self):
@@ -54,10 +55,11 @@ class CartaCategoria(models.Model):
 class Carta(models.Model):
     carCodigo = models.CharField(max_length=7, primary_key=True)  # Código único del producto
     carNombre = models.CharField(max_length=150)  # Nombre del producto
+    carCantidad = models.IntegerField() # Cantidad del producto
     carDescripcion = models.TextField()  # Descripción del producto
     carPrecio = models.DecimalField(max_digits=9, decimal_places=2)  # Precio del producto
     carFoto = models.ImageField(upload_to='carta/')  # Imagen del producto
-    carStatus_1 = models.CharField(max_length=3)  # Estado del producto
+    carStatus = models.CharField(max_length=3, default="ACT")  # Estado del carrito (ACT: Activo, FIN: Finalizado)
 
     def __str__(self):
         return self.carNombre

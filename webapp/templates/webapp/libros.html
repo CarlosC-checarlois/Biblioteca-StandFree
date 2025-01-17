@@ -88,6 +88,41 @@
         }
 
     </style>
+    {% comment %}
+    SpinBox CSS
+    {% endcomment %}
+    <style>
+        /* Contenedor del SpinBox */
+        .spinbox-container {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinbox-container label {
+            font-size: 0.9rem;
+            color: #333;
+            margin-right: 10px;
+        }
+
+        /* Estilo del SpinBox */
+        .spinbox {
+            width: 60px;
+            height: 35px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .spinbox:focus {
+            border-color: #a2c94e;
+            box-shadow: 0 0 5px rgba(162, 201, 78, 0.5);
+            outline: none;
+        }
+    </style>
 {% endblock %}
 {% block contenido_pagina %}
     <!-- Sección de Introducción -->
@@ -113,7 +148,6 @@
         <p>
             Disfruta de nuestra selección especial de libros, perfectas para acompañar tus pedidos.
         </p>
-
         <div class="search-bar">
             <input
                     type="text"
@@ -122,7 +156,8 @@
                     aria-label="Buscar producto"
                     value="{{ search_query|default:'' }}"
             />
-            <select id="search-type" aria-label="Tipo de búsqueda">
+            <select id="search-type" aria-label="Tipo de búsqueda" style="
+">
                 <option value="nombre" {% if search_type == 'nombre' %}selected{% endif %}>Nombre</option>
                 <option value="precio" {% if search_type == 'precio' %}selected{% endif %}>Precio</option>
                 <option value="categoria" {% if search_type == 'categoria' %}selected{% endif %}>Categoría</option>
@@ -130,8 +165,6 @@
             <button id="search-button" onclick="handleSearch()">Buscar</button>
             <button id="reset-button" onclick="handleReset()">Restablecer</button>
         </div>
-
-
         <!-- Lista de Libros -->
         <ul class="book-list">
             {% if libros %}
@@ -146,14 +179,39 @@
                                 onclick="openModal('{% static 'webapp/images/libros/el_principito.png' %}')"
                         >
                         <div class="menu-details">
-                            <h3>{{ libro.libNombre }}</h3>
-                            <p>Autor: {{ libro.libAutor }}</p>
-                            <p>Fecha de Publicación: {{ libro.libFechaPublicacion }}</p>
-                            <p>Precio: ${{ libro.libPrecio }}</p>
+                            <h3><strong>{{ libro.libNombre }}</strong></h3>
+                            <p>{{ libro.libSinopsis|truncatechars:70 }}</p>
+                            {% comment %}
+                            En esta area, el precio debe de ir en incremento a consideracion del incremento del SpinBox
+                            Si por ejemplo un libro valia 9 Dolares, y en el spinBox tengo 1, entonces un libro vale 9
+                            si tengo 2 en el spinbox, tengo en total 18 dolares etc....
+                            {% endcomment %}
+                            <p><strong>Precio:</strong> ${{ libro.libPrecio }}</p>
+                            {% comment %}
+                            En esta area debe de existir un SpinBox, el cual va a poder tener un incremento maximo acorde
+                            a la cantidad que existe de dicho producto
+                            {% endcomment %}
+                            <!-- Cantidad con SpinBox -->
+                            <div>
+                                <label for="cantidad-{{ libro.libCodigo }}"><strong>Cantidad:</strong></label>
+                                <input
+                                        id="cantidad-{{ libro.libCodigo }}"
+                                        type="number"
+                                        value="1"
+                                        min="1"
+                                        max="{{ libro.libCantidad }}"
+                                        class="spinbox"
+                                        style="width: 60px; margin-left: 5px;"
+                                />
+                            </div>
+
+                            <!-- Botones de acción -->
                             <div class="book-details">
                                 <a href="{% url 'detalle_libro' libro.libCodigo %}" class="boton"
                                    style="text-decoration: none;">Ver más</a>
-                                <button class="boton" onclick="addToCart('{{ libro.libCodigo }}')">Comprar</button>
+                                <a class="boton boton-comprar" onclick="addToCart('{{ libro.libCodigo }}', '{{ libro.libCantidad }}')">
+                                    Comprar
+                                </a>
                             </div>
                         </div>
                     </li>
@@ -191,21 +249,19 @@
         }
 
         // Función para construir la URL y redirigir
-        function addToCart(libroId) {
-            const url = `/carrito/agregar/${libroId}/libro/`;
-            window.location.href = url; // Redirigir al URL generado
+        function addToCart(libroCodigo, maxCantidad) {
+            const cantidadInput = document.getElementById(`cantidad-${libroCodigo}`);
+            const cantidad = parseInt(cantidadInput.value);
+
+            if (cantidad > maxCantidad) {
+                alert("No puedes agregar más unidades de las disponibles.");
+                return;
+            }
+
+            // Redirigir a la URL con el producto y la cantidad
+            window.location.href = `/carrito/agregar/${libroCodigo}/${cantidad}/libro/`;
         }
 
-        // Placeholder para el botón de Ver más
-        function verMas() {
-            alert('Función Ver más aún no implementada');
-        }
-
-        // Función para construir la URL y redirigir
-        function addToCart(libroId) {
-            const url = `/carrito/agregar/${libroId}/libro/`;
-            window.location.href = url; // Redirigir al URL generado
-        }
 
         // Placeholder para el botón de Ver más
         function verMas() {

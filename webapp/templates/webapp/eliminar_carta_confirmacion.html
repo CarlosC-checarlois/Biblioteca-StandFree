@@ -1,0 +1,19 @@
+{% extends "cabezal.html" %}
+{% block titulo_pagina %}
+<title>Eliminar Carta</title>
+{% endblock %}
+
+{% block contenido_pagina %}
+<div class="container mt-5">
+    <h2 class="text-center text-danger">¿Estás seguro de que deseas eliminar esta carta?</h2>
+    <p class="text-center">Nombre: <strong>{{ carta.carNombre }}</strong></p>
+    <p class="text-center">Precio: <strong>S/ {{ carta.carPrecio }}</strong></p>
+    <form method="POST" action="">
+        {% csrf_token %}
+        <div class="text-center">
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+            <a href="{% url 'gestionar_cartas' %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

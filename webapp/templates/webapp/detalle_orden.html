@@ -1,0 +1,137 @@
+{% extends "cabezal.html" %}
+{% block titulo_pagina %}
+    <title>Detalle de orden</title>
+{% endblock %}
+{% block cargar_static %}
+    {% load static %}
+{% endblock %}
+{% block css_archivos %}
+    {% comment %}
+    CSS del boton del wssp
+    {% endcomment %}
+    <style>
+        .btn-wsp {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 25px;
+            right: 25px;
+            background: #fff;
+            color: #FFF;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 35px;
+            box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            transition: all 300ms ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-wsp:hover {
+            background: #d0ffd9;
+        }
+
+        .btn-wsp img {
+            width: 100%; /* Hace que la imagen ocupe todo el ancho del contenedor */
+            height: 100%; /* Hace que la imagen ocupe toda la altura del contenedor */
+            object-fit: cover; /* Ajusta la imagen para llenar completamente el contenedor sin distorsionar */
+            border-radius: 50%; /* Mantiene el borde redondeado de la imagen */
+        }
+
+        @media only screen and (min-width: 320px) and (max-width: 768px) {
+            .btn-wsp {
+                width: 63px;
+                height: 63px;
+            }
+
+            .btn-wsp img {
+                width: 100%; /* Ajusta el tamaño para que llene el nuevo tamaño del botón */
+                height: 100%; /* Ajusta el tamaño para que llene el nuevo tamaño del botón */
+            }
+        }
+
+    </style>
+    <link rel="stylesheet" href="{% static 'webapp/css/styles_administrador_detalle_orden.css' %}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+{% endblock %}
+
+{% block contenido_pagina %}
+    <br>
+    <br>
+<div class="detail-container">
+    <div class="detail-header">
+        <h2>Detalle de la Orden {{ orden.carCodigo }}</h2>
+        <p><strong>Estado:</strong> {{ orden.carStatus }}</p>
+        <p><strong>Total:</strong> S/ {{ orden.carTotal }}</p>
+        {% if usuario_orden %}
+            <p><strong>Usuario:</strong> {{ usuario_orden.usuNombre }} {{ usuario_orden.usuApellido }}</p>
+            <p><strong>Email:</strong> {{ usuario_orden.email }}</p>
+        {% else %}
+            <p class="text-danger">Usuario no asociado a la orden.</p>
+        {% endif %}
+    </div>
+
+    <!-- Mostrar sección de Libros si existen -->
+    {% if libros %}
+    <div>
+        <h3 class="section-title">
+            <i class="bi bi-book"></i> Libros
+        </h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Cantidad</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for libro in libros %}
+                <tr>
+                    <td>{{ libro.libro.libNombre }}</td>
+                    <td>{{ libro.libxcarCantidad }}</td>
+                    <td>S/ {{ libro.libxcarTotal }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Mostrar sección de Productos de Carta si existen -->
+    {% if cartas %}
+    <div>
+        <h3 class="section-title">
+            <i class="bi bi-cup"></i> Productos de Carta
+        </h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Cantidad</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for carta in cartas %}
+                <tr>
+                    <td>{{ carta.carta.carNombre }}</td>
+                    <td>{{ carta.carxcarCantidad }}</td>
+                    <td>S/ {{ carta.carxcarTotal }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Si no hay ni libros ni cartas -->
+    {% if not libros and not cartas %}
+    <p class="no-data">No hay productos asociados a esta orden.</p>
+    {% endif %}
+
+    <a href="{% url 'gestionar_ordenes' %}" class="btn-back">Regresar</a>
+</div>
+{% endblock %}

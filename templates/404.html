@@ -1,0 +1,200 @@
+{% extends "cabezal.html" %}
+{% block cargar_static %}
+    {% load static %}
+{% endblock %}
+{% block titulo_pagina %}
+    <title>Cafetería StandFree</title>
+{% endblock %}
+{% block css_archivos %}
+    <style>
+        .hr-container {
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hr-container::before {
+            content: '• • • • •';
+            font-size: 50px;
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#6c683a", endColorstr="#3d2222", GradientType=1);
+            margin-right: 20px; /* Espaciado entre los puntos y la línea */
+        }
+
+        hr {
+            border: 0;
+            width: 100%;
+            height: 1px;
+            background-color: #bada55;
+            margin: 0;
+        }
+
+        .btn-wsp {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 25px;
+            right: 25px;
+            background: #fff;
+            color: #FFF;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 35px;
+            box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            transition: all 300ms ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-wsp:hover {
+            background: #d0ffd9;
+        }
+
+        .btn-wsp img {
+            width: 100%; /* Hace que la imagen ocupe todo el ancho del contenedor */
+            height: 100%; /* Hace que la imagen ocupe toda la altura del contenedor */
+            object-fit: cover; /* Ajusta la imagen para llenar completamente el contenedor sin distorsionar */
+            border-radius: 50%; /* Mantiene el borde redondeado de la imagen */
+        }
+
+        @media only screen and (min-width: 320px) and (max-width: 768px) {
+            .btn-wsp {
+                width: 63px;
+                height: 63px;
+            }
+
+            .btn-wsp img {
+                width: 100%; /* Ajusta el tamaño para que llene el nuevo tamaño del botón */
+                height: 100%; /* Ajusta el tamaño para que llene el nuevo tamaño del botón */
+            }
+        }
+
+    </style>
+    <style>
+        /* Contenedor principal */
+        .error-404-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to bottom, #fdfcf3, #ffe7c7);
+            color: #4d331f;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Contenido central */
+        .error-404-content {
+            text-align: center;
+            background-color: #fff8ec;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: bounce 2s infinite; /* Animación de rebote */
+        }
+
+        /* Título del error */
+        .error-title {
+            font-size: 8rem;
+            font-weight: bold;
+            color: #d9534f;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animación de rebote */
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Mensaje de error */
+        .error-message {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        /* Submensaje de error */
+        .error-submessage {
+            font-size: 1rem;
+            color: #7a5936;
+        }
+
+        .error-submessage a {
+            color: #d9534f;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .error-submessage a:hover {
+            color: #c9302c;
+            text-decoration: underline;
+        }
+
+        /* Botón para volver al inicio */
+        .btn-back {
+            background-color: #d9534f;
+            color: white;
+            font-size: 1rem;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background-color: #c9302c;
+            transform: scale(1.1); /* Ampliar ligeramente el botón al pasar el cursor */
+        }
+
+    </style>
+{% endblock %}
+{% block contenido_pagina %}
+    <div class="error-404-container">
+        <div class="error-404-content">
+            <h1 class="error-title">404</h1>
+            <p class="error-message">Oops! La página que buscas no está disponible.</p>
+            <p class="error-submessage">Quizás quieras volver al <a href="{% url 'index' %}">inicio</a> o explorar otras
+                secciones.</p>
+            <button class="btn-back" onclick="window.location.href='{% url 'index' %}'">Volver al Inicio</button>
+        </div>
+    </div>
+{% endblock %}
+{% block jvscript_archivos_defer %}
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const carritoTexto = document.querySelector(".carrito-texto");
+            const carritoIcono = document.querySelector(".carrito-icono");
+
+            function actualizarCarrito() {
+                const anchoVentana = window.innerWidth;
+
+                if (anchoVentana <= 550) {
+                    carritoTexto.style.display = "none"; // Ocultar texto en pantallas muy pequeñas
+                    carritoIcono.style.display = "flex"; // Mostrar ícono
+                } else if (anchoVentana > 550 && anchoVentana <= 992) {
+                    carritoTexto.style.display = "inline-block"; // Mostrar texto en pantallas medianas
+                    carritoIcono.style.display = "none"; // Ocultar ícono
+                } else {
+                    carritoTexto.style.display = "inline-block"; // Mostrar texto en pantallas grandes
+                    carritoIcono.style.display = "none"; // Ocultar ícono
+                }
+            }
+
+            // Ejecutar al cargar la página
+            actualizarCarrito();
+
+            // Ejecutar al redimensionar la ventana
+            window.addEventListener("resize", actualizarCarrito);
+        });
+    </script>
+    <script src="{% static 'webapp/js/main.js' %}"></script>
+    <script src="{% static 'webapp/js/modal.js' %}"></script>
+{% endblock %}

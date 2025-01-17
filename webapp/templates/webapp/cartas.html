@@ -89,6 +89,41 @@
         }
 
     </style>
+    {% comment %}
+    SpinBox
+    {% endcomment %}
+    <style>
+        /* Contenedor del SpinBox */
+        .spinbox-container {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinbox-container label {
+            font-size: 0.9rem;
+            color: #333;
+            margin-right: 10px;
+        }
+
+        /* Estilo del SpinBox */
+        .spinbox {
+            width: 60px;
+            height: 35px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .spinbox:focus {
+            border-color: #a2c94e;
+            box-shadow: 0 0 5px rgba(162, 201, 78, 0.5);
+            outline: none;
+        }
+    </style>
 {% endblock %}
 {% block contenido_pagina %}
     <!-- Sección de Introducción -->
@@ -107,12 +142,10 @@
             Explora nuestra selección de cafés y bebidas para acompañar tu lectura.
         </p>
     </section>
-
     <!-- Sección de Carta -->
     <section class="catalogo">
         <h2 class="vision_h2_span">Carta de Cafés</h2>
         <p>Disfruta de nuestra selección especial de cafés y bebidas.</p>
-
         <!-- Barra de búsqueda -->
         <div class="search-bar">
             <input
@@ -133,17 +166,15 @@
         <div class="input-hint">
             Ingrese un valor a buscar en el campo de arriba y seleccione el tipo de búsqueda.
         </div>
-
         <!-- Lista de Productos -->
         <ul class="book-list" id="product-list">
-            {% if productos %}
-                {% for producto in productos %}
+            {% if cartas %}
+                {% for carta in cartas %}
                     <li
                             class="book-item"
-                            data-nombre="{{ producto.carNombre }}"
-                            data-precio="{{ producto.carPrecio }}"
-                            data-categoria="{{ producto.carCategoria }}"
-                    >
+                            data-nombre="{{ carta.carNombre }}"
+                            data-precio="{{ carta.carPrecio }}"
+                            data-categoria="{{ carta.carCategoria }}">
                         <img
                                 src="{% static 'webapp/images/cartas/latte_carta.png' %}"
                                 alt="{{ producto.carNombre }}"
@@ -152,14 +183,33 @@
                                 onclick="openModal('{% static 'webapp/images/cartas/latte_carta.png' %}')"
                         />
                         <div class="menu-details">
-                            <h3>{{ producto.carNombre }}</h3>
-                            <p>{{ producto.carDescripcion }}</p>
-                            <p>Precio: ${{ producto.carPrecio }}</p>
-                            <div class="actions">
-                                <a href="{% url 'detalle_carta' producto.carCodigo %}" class="boton"
-                                   style="text-decoration: none;">Ver más</a>
-                                <button class="boton" onclick="addToCart('{{ producto.carCodigo }}')">Comprar</button>
+                            <h3><strong>{{ carta.carNombre }}</strong></h3>
+                            <p>{{ carta.carDescripcion|truncatechars:70 }}</p>
+                            <p><strong>Precio:</strong> ${{ carta.carPrecio }}</p>
+                            <div>
+                                <label for="cantidad-{{ carta.carCodigo }}"><strong>Cantidad:</strong></label>
+                                <input
+                                        id="cantidad-{{ carta.carCodigo }}"
+                                        type="number"
+                                        value="1"
+                                        min="1"
+                                        max="{{ carta.carCantidad }}"
+                                        class="spinbox"
+                                        style="width: 60px; margin-left: 5px;"/>
                             </div>
+
+                            <!-- Botones de acción -->
+                            <div class="book-details">
+                                <a href="{% url 'detalle_carta' carta.carCodigo %}" class="boton"
+                                   style="text-decoration: none;">Ver más</a>
+                                <a
+                                        class="boton boton-comprar"
+                                        onclick="addToCart('{{ carta.carCodigo }}', '{{ carta.carCantidad }}')"
+                                >
+                                    Comprar
+                                </a>
+                            </div>
+
                         </div>
                     </li>
                 {% endfor %}
@@ -195,23 +245,18 @@
             modal.style.display = 'none';
         }
 
-        // Función para construir la URL y redirigir
-        function addToCart(carCodigo) {
-            const url = `/carrito/agregar/${carCodigo}/carta/`;
-            window.location.href = url; // Redirigir al URL generado
-        }
+        function addToCart(cartaCodigo, maxCantidad) {
+            const cantidadInput = document.getElementById(`cantidad-${cartaCodigo}`);
+            const cantidad = parseInt(cantidadInput.value);
 
-        // Placeholder para el botón de Ver más
-        function verMas() {
-            alert('Función Ver más aún no implementada');
-        }
+            if (cantidad > maxCantidad) {
+                alert("No puedes agregar más unidades de las disponibles.");
+                return;
+            }
 
-        // Función para construir la URL y redirigir
-        function addToCart(carCodigo) {
-            const url = `/carrito/agregar/${carCodigo}/carta/`;
-            window.location.href = url; // Redirigir al URL generado
+            // Redirigir a la URL con el producto y la cantidad
+            window.location.href = `/carrito/agregar/${cartaCodigo}/${cantidad}/carta/`;
         }
-
         // Placeholder para el botón de Ver más
         function verMas() {
             alert('Función Ver más aún no implementada');

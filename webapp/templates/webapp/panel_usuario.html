@@ -7,7 +7,9 @@
 {% endblock %}
 {% block css_archivos %}
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
+    {% comment %}
+    CSS del boton del wssp
+    {% endcomment %}
     <style>
         .btn-wsp {
             position: fixed;
@@ -51,6 +53,11 @@
             }
         }
 
+    </style>
+    {% comment %}
+    CSS del switch
+    {% endcomment %}
+    <style>
         /*ESTILOS DE SWITCH*/
         .switch {
             width: 60px;
@@ -416,43 +423,42 @@
             // Ejecutar al redimensionar la ventana
             window.addEventListener("resize", actualizarCarrito);
         });
-document.addEventListener("DOMContentLoaded", () => {
-        const switchElement = document.querySelector(".switch");
-        const darkModeClass = "dark-mode";
-        const header = document.querySelector("header");
+        document.addEventListener("DOMContentLoaded", () => {
+            const switchElement = document.querySelector(".switch");
+            const darkModeClass = "dark-mode";
+            const header = document.querySelector("header");
 
-        // Verificar el estado inicial del modo oscuro en localStorage
-        const darkModePreference = localStorage.getItem("darkMode");
+            // Verificar el estado inicial del modo oscuro en localStorage
+            const darkModePreference = localStorage.getItem("darkMode");
 
-        if (darkModePreference === "enabled") {
-            // Si está habilitado el modo oscuro, activarlo
-            document.body.classList.add(darkModeClass);
-            header.classList.add("dark-header"); // Agregar clase al header
-            switchElement.classList.add("active"); // Reflejar el estado en el switch
-        } else {
-            // Si no está habilitado, asegurar que esté en modo claro
-            document.body.classList.remove(darkModeClass);
-            header.classList.remove("dark-header");
-            switchElement.classList.remove("active");
-        }
-
-        // Alternar entre claro y oscuro al hacer clic en el switch
-        switchElement.addEventListener("click", () => {
-            const isDarkModeEnabled = document.body.classList.toggle(darkModeClass);
-            header.classList.toggle("dark-header");
-            switchElement.classList.toggle("active");
-
-            // Guardar la preferencia del usuario en localStorage
-            if (isDarkModeEnabled) {
-                localStorage.setItem("darkMode", "enabled");
+            if (darkModePreference === "enabled") {
+                // Si está habilitado el modo oscuro, activarlo
+                document.body.classList.add(darkModeClass);
+                header.classList.add("dark-header"); // Agregar clase al header
+                switchElement.classList.add("active"); // Reflejar el estado en el switch
             } else {
-                localStorage.setItem("darkMode", "disabled");
+                // Si no está habilitado, asegurar que esté en modo claro
+                document.body.classList.remove(darkModeClass);
+                header.classList.remove("dark-header");
+                switchElement.classList.remove("active");
             }
+
+            // Alternar entre claro y oscuro al hacer clic en el switch
+            switchElement.addEventListener("click", () => {
+                const isDarkModeEnabled = document.body.classList.toggle(darkModeClass);
+                header.classList.toggle("dark-header");
+                switchElement.classList.toggle("active");
+
+                // Guardar la preferencia del usuario en localStorage
+                if (isDarkModeEnabled) {
+                    localStorage.setItem("darkMode", "enabled");
+                } else {
+                    localStorage.setItem("darkMode", "disabled");
+                }
+            });
         });
-    });
 
     </script>
-
     <script src="{% static 'webapp/js/main.js' %}"></script>
     <script src="{% static 'webapp/js/modal.js' %}"></script>
 {% endblock %}

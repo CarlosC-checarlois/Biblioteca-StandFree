@@ -55,6 +55,7 @@ footer p {
     font-size: 0.9rem;
     letter-spacing: 0.5px;
 }
+
 header {
     background: rgb(122, 117, 61);
     background: -moz-linear-gradient(90deg, rgba(122, 117, 61, 1) 0%, rgba(61, 34, 34, 1) 100%);
@@ -143,36 +144,78 @@ header {
 }
 
 
+/* Botón base */
 .boton {
-    font-size: 2vw;
+    text-decoration: none;
+    font-size: 1rem; /* Ajustar tamaño de fuente */
     display: inline-block;
-    background: rgb(122, 117, 61);
-    background: -moz-linear-gradient(90deg, rgba(122, 117, 61, 1) 0%, rgba(61, 34, 34, 1) 100%);
-    background: -webkit-linear-gradient(90deg, rgba(122, 117, 61, 1) 0%, rgba(61, 34, 34, 1) 100%);
-    background: linear-gradient(90deg, rgba(122, 117, 61, 1) 0%, rgba(61, 34, 34, 1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#7a753d", endColorstr="#3d2222", GradientType=1);
-    color: white;
-    padding: 10px 20px;
-    margin-top: 15px;
-    border-radius: 5px;
+    background: rgb(155, 122, 61);
+    background: linear-gradient(90deg, rgba(155, 122, 61, 1) 0%, rgba(94, 44, 44, 1) 100%);
+    color: #fff;
+    padding: 8px 16px; /* Reducir padding */
+    margin-top: 10px;
+    margin-right: 8px;
+    border-radius: 5px; /* Bordes más pequeños */
     text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15); /* Sombra ligera */
+    transition: all 0.3s ease-in-out;
 }
 
+/* Hover para todos los botones */
 .boton:hover {
-    background-color: #ffcc66;
+    background: linear-gradient(90deg, rgba(255, 200, 102, 1) 0%, rgba(205, 120, 80, 1) 100%);
     color: #333;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    transform: translateY(-2px); /* Elevación más sutil */
 }
+
+/* Botón "Comprar" */
+.boton-comprar {
+    background: linear-gradient(90deg, rgba(139, 69, 19, 1) 0%, rgba(165, 42, 42, 1) 100%);
+    color: white;
+    padding: 8px 16px; /* Reducir padding */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem; /* Ajustar tamaño de fuente */
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hover para "Comprar" */
+.boton-comprar:hover {
+    background: linear-gradient(90deg, rgba(200, 160, 90, 1) 0%, rgba(190, 90, 70, 1) 100%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    transform: scale(1.02); /* Elevación ligera */
+}
+
+/* Botón "Enviar" */
+.boton-enviar {
+    background: linear-gradient(90deg, rgba(88, 140, 66, 1) 0%, rgba(40, 80, 20, 1) 100%);
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hover para "Enviar" */
+.boton-enviar:hover {
+    background: linear-gradient(90deg, rgba(130, 200, 100, 1) 0%, rgba(60, 120, 60, 1) 100%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    transform: scale(1.02);
+}
+
 
 .p_hero {
     text-align: justify;
 }
 
-.boton {
-    width: auto;
-    max-width: 100%;
-}
 
 .h1_span {
     display: block;
@@ -323,21 +366,6 @@ header {
     background-color: #f0f0f0;
     border-radius: 5px;
 }
-
-.boton-comprar {
-    background-color: #333;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.boton-comprar:hover {
-    background-color: #555;
-}
-
 
 /* Contenedor del formulario */
 .section_register {
@@ -967,21 +995,6 @@ html {
     font-size: 1rem;
 }
 
-.boton-enviar {
-    background-color: #333;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    font-size: 1rem;
-}
-
-.boton-enviar:hover {
-    background-color: #555;
-}
-
 /* Mapa */
 .mapa iframe {
     border-radius: 8px;
@@ -1563,6 +1576,7 @@ header .logo {
     -webkit-text-fill-color: transparent;
     font-family: 'Dancing Script', cursive;
 }
+
 .vision_h2_span {
     font-size: 4vw;
     font-weight: bold;
@@ -1573,6 +1587,7 @@ header .logo {
     -webkit-text-fill-color: transparent;
     font-family: 'Dancing Script', cursive;
 }
+
 .vision_h3_span {
     font-size: 3vw;
     font-weight: bold;
@@ -1606,6 +1621,103 @@ header .logo {
 /* CSS para el icono flotante de Whatssap */
 
 
-
 /* CSS de Carrito de compras icono del header  */
 
+/* CSS para los botones de reset y search */
+
+/* Botones base */
+#search-button, #reset-button {
+    font-size: 0.9rem;
+    font-weight: bold;
+    background: rgb(155, 122, 61);
+    background: linear-gradient(90deg, rgba(155, 122, 61, 1) 0%, rgba(94, 44, 44, 1) 100%);
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.3s ease-in-out;
+    margin: 0 5px; /* Espaciado entre botones */
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); /* Sombra ligera */
+}
+
+/* Hover para ambos botones */
+#search-button:hover, #reset-button:hover {
+    background: linear-gradient(90deg, rgba(255, 200, 102, 1) 0%, rgba(205, 120, 80, 1) 100%);
+    color: #333;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05); /* Pequeño zoom al pasar el cursor */
+}
+
+/* Adaptación para pantallas pequeñas */
+@media (max-width: 768px) {
+    #search-button, #reset-button {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+}
+
+/* Posicionamiento específico si están alineados con otros elementos */
+#search-button, #reset-button {
+    display: inline-block;
+    vertical-align: middle;
+}
+/* Estilo base para el select */
+#search-type {
+    font-size: 1rem;
+    font-weight: bold;
+    background: rgb(155, 122, 61);
+    background: linear-gradient(90deg, rgba(155, 122, 61, 1) 0%, rgba(94, 44, 44, 1) 100%);
+    color: white;
+    padding: 8px 12px;
+    border: 2px solid #fff2dc; /* Borde distintivo */
+    border-radius: 5px;
+    appearance: none; /* Eliminar el estilo predeterminado */
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); /* Sombra suave */
+}
+
+/* Icono de dropdown personalizado */
+#search-type::after {
+    content: '▼';
+    font-size: 0.9rem;
+    color: white;
+    position: absolute;
+    right: 10px;
+    pointer-events: none; /* No permite interactuar con el icono */
+}
+
+/* Hover y foco */
+#search-type:hover, #search-type:focus {
+    background: linear-gradient(90deg, rgba(255, 200, 102, 1) 0%, rgba(205, 120, 80, 1) 100%);
+    color: #333;
+    border-color: #ff9966; /* Cambiar el color del borde */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Opciones del select */
+#search-type option {
+    font-size: 1rem;
+    font-weight: bold;
+    background: white;
+    color: #333;
+    padding: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Opciones al pasar el cursor */
+#search-type option:hover {
+    background-color: rgba(255, 200, 102, 1);
+    color: #333;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    #search-type {
+        font-size: 0.9rem;
+        padding: 6px 10px;
+    }
+}

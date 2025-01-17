@@ -1,5 +1,6 @@
 asgiref==3.7.2
 beautifulsoup4==4.12.3
+dj-database-url==2.2.0
 Django==3.2.25
 django-bootstrap-v5==1.0.11
 Faker==18.13.0
@@ -7,6 +8,7 @@ gunicorn==23.0.0
 importlib-metadata==6.7.0
 packaging==24.0
 Pillow==9.5.0
+psycopg2==2.9.9
 python-dateutil==2.9.0.post0
 pytz==2024.2
 six==1.16.0

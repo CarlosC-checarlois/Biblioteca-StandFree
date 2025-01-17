@@ -93,14 +93,6 @@
                             placeholder="Ingresa tu contraseña"
                             required>
                 </div>
-                <!-- Mostrar mensajes de error o éxito -->
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
                 <!-- Mensaje de Registro -->
                 <div class="text-start">
                     <p>¿Aún no tienes una cuenta?

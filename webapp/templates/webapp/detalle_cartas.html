@@ -5,8 +5,8 @@
 {% endblock %}
 
 {% block titulo_pagina %}
-<title>Detalles de {{ carta.carNombre }}</title>
-<meta name="description" content="Detalles del producto {{ carta.carNombre }}. {{ carta.carDescripcion }}">
+    <title>Detalles de {{ carta.carNombre }}</title>
+    <meta name="description" content="Detalles del producto {{ carta.carNombre }}. {{ carta.carDescripcion }}">
 {% endblock %}
 {% block css_archivos %}
     <style>
@@ -90,63 +90,118 @@
         }
 
     </style>
+    {% comment %}
+    SpinBox CSS
+    {% endcomment %}
+    <style>
+        /* Contenedor del SpinBox */
+        .spinbox-container {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinbox-container label {
+            font-size: 0.9rem;
+            color: #333;
+            margin-right: 10px;
+        }
+
+        /* Estilo del SpinBox */
+        .spinbox {
+            width: 60px;
+            height: 35px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .spinbox:focus {
+            border-color: #a2c94e;
+            box-shadow: 0 0 5px rgba(162, 201, 78, 0.5);
+            outline: none;
+        }
+    </style>
 {% endblock %}
 {% block contenido_pagina %}
-<main id="page-content">
-    <div id="product-container">
-        <h1 id="product-title">{{ carta.carNombre }}</h1>
+    <main id="page-content">
+        <div id="product-container">
+            <h1 id="product-title">{{ carta.carNombre }}</h1>
 
-        <div id="product-detail">
-            <!-- Imagen del producto -->
-            <img id="product-image" src="{% static 'webapp/images/cartas/latte_carta.png' %}" alt="{{ carta.carNombre }}" onclick="openModal('{% static 'webapp/images/cartas/latte_carta.png' %}')">
+            <div id="product-detail">
+                <!-- Imagen del producto -->
+                <img id="product-image" src="{% static 'webapp/images/cartas/latte_carta.png' %}"
+                     alt="{{ carta.carNombre }}"
+                     onclick="openModal('{% static 'webapp/images/cartas/latte_carta.png' %}')">
 
-            <!-- Información del producto -->
-            <div id="product-info">
-                <p><strong>Código:</strong> {{ carta.carCodigo }}</p>
-                <p><strong>Nombre:</strong> {{ carta.carNombre }}</p>
-                <p><strong>Categoría:</strong> {{ carta.carCategoria }}</p>
-                <p><strong>Descripción:</strong> {{ carta.carDescripcion }}</p>
-                <p><strong>Precio:</strong> ${{ carta.carPrecio }}</p>
-                <p><strong>Estado:</strong> Disponible</p>
-
-                <div id="book-buttons">
-                    <a href="{% url 'index_cartas' %}" class="boton" style="text-decoration: none;">Volver</a>
-                    <button class="boton boton-comprar" onclick="addToCart('{{ carta.carCodigo }}')">Comprar</button>
+                <!-- Información del producto -->
+                <div id="product-info">
+                    <p><strong>Código:</strong> {{ carta.carCodigo }}</p>
+                    <p><strong>Nombre:</strong> {{ carta.carNombre }}</p>
+                    <p><strong>Categoría:</strong> {{ carta.carCategoria }}</p>
+                    <p><strong>Descripción:</strong> {{ carta.carDescripcion|truncatechars:120 }}</p>
+                    <p><strong>Estado:</strong> Disponible</p>
+                    <p><strong>Precio:</strong> ${{ carta.carPrecio }}</p>
+                    <div>
+                        <label for="cantidad-{{ carta.carCodigo }}">Cantidad:</label>
+                        <input
+                                id="cantidad-{{ carta.carCodigo }}"
+                                type="number"
+                                value="1"
+                                min="1"
+                                max="{{ carta.carCantidad }}"
+                                class="spinbox"
+                                style="width: 60px; margin-left: 5px;"/>
+                    </div>
+                    <div id="book-buttons">
+                        <a href="{% url 'index_cartas' %}" class="boton" style="text-decoration: none;">Volver</a>
+                        <button class="boton boton-comprar" onclick="addToCart('{{ carta.carCodigo }}')">Comprar
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
 
-<!-- Modal para imagen ampliada -->
-<div id="imageModal-standfree" class="modal">
-    <span id="modal-close-btn" class="close" onclick="closeModal()">&times;</span>
-    <div class="modal-content-wrapper">
-        <img class="modal-content" id="expandedImage-standfree">
+    <!-- Modal para imagen ampliada -->
+    <div id="imageModal-standfree" class="modal">
+        <span id="modal-close-btn" class="close" onclick="closeModal()">&times;</span>
+        <div class="modal-content-wrapper">
+            <img class="modal-content" id="expandedImage-standfree">
+        </div>
     </div>
-</div>
 {% endblock %}
 
 {% block jvscript_archivos_defer %}
-<script>
-    // Función para abrir el modal con la imagen seleccionada
-    function openModal(imageSrc) {
-        const modal = document.getElementById('imageModal-standfree');
-        const expandedImage = document.getElementById('expandedImage-standfree');
-        expandedImage.src = imageSrc;
-        modal.style.display = 'flex';
-    }
+    <script>
+        // Función para abrir el modal con la imagen seleccionada
+        function openModal(imageSrc) {
+            const modal = document.getElementById('imageModal-standfree');
+            const expandedImage = document.getElementById('expandedImage-standfree');
+            expandedImage.src = imageSrc;
+            modal.style.display = 'flex';
+        }
 
-    // Función para cerrar el modal
-    function closeModal() {
-        const modal = document.getElementById('imageModal-standfree');
-        modal.style.display = 'none';
-    }
+        // Función para cerrar el modal
+        function closeModal() {
+            const modal = document.getElementById('imageModal-standfree');
+            modal.style.display = 'none';
+        }
 
-    // Función para agregar el producto al carrito
-    function addToCart(carCodigo) {
-        const url = `/carrito/agregar/${carCodigo}/carta/`;
-        window.location.href = url; // Redirigir al URL generado
-    }
-</script>
+        function addToCart(cartaCodigo, maxCantidad) {
+            const cantidadInput = document.getElementById(`cantidad-${cartaCodigo}`);
+            const cantidad = parseInt(cantidadInput.value);
+
+            if (cantidad > maxCantidad) {
+                alert("No puedes agregar más unidades de las disponibles.");
+                return;
+            }
+
+            // Redirigir a la URL con el producto y la cantidad
+            window.location.href = `/carrito/agregar/${cartaCodigo}/${cantidad}/carta/`;
+        }
+    </script>
 {% endblock %}

@@ -1,119 +1,39 @@
-import os
-import sys
-import django
-from faker import Faker
-import random
+import re
 
-# Agregar el directorio raíz del proyecto al sistema PATH
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-sys.path.append(parent_dir)
 
-# Configuración de Django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'BibliotecaStandFree.settings')
-django.setup()
+def transform_sql_file(input_file: str, output_file: str):
+    """
+    Transforma un archivo SQL de SQLite a PostgreSQL, cambiando:
+    1. Eliminando comillas dobles de los nombres de las tablas.
+    2. Agregando el prefijo 'public.' a los nombres de las tablas en los comandos INSERT INTO.
+    """
+    try:
+        with open(input_file, 'r', encoding='utf-8') as infile:
+            sql_content = infile.read()
 
-from webapp.models import Libro, LibroCategoria, LibrosXLibreriaCategoria, Carta, CartaCategoria, RelCartaCategoria
+        # Expresión regular para encontrar y transformar los nombres de las tablas en INSERT INTO
+        table_pattern = re.compile(r'INSERT INTO\s+"([^"]+)"', re.IGNORECASE)
 
-# Instancia de Faker
-faker = Faker()
+        # Reemplazar las tablas con el prefijo 'public.' y sin comillas dobles
+        transformed_sql = table_pattern.sub(lambda match: f'INSERT INTO public.{match.group(1)}', sql_content)
 
-# Crear categorías de libros
-def create_libro_categorias():
-    categorias = ['Ficción', 'Ciencia', 'Historia', 'Fantasía', 'Biografía', 'Infantil', 'Romance', 'Misterio']
-    for categoria in categorias:
-        LibroCategoria.objects.get_or_create(
-            libxcatCodigo=faker.unique.lexify(text='LBCAT???'),
-            libxcatNombre=categoria
-        )
-    print(f'{len(categorias)} categorías de libros creadas.')
+        # Guardar el resultado en un nuevo archivo
+        with open(output_file, 'w', encoding='utf-8') as outfile:
+            outfile.write(transformed_sql)
 
-# Crear libros
-def create_libros(num_libros=50):
-    categorias = list(LibroCategoria.objects.all())
-    for _ in range(num_libros):
-        libro = Libro.objects.create(
-            libCodigo=faker.unique.lexify(text='LIB???'),
-            libNombre=faker.sentence(nb_words=4),
-            libAutor=faker.name(),
-            libFechaPublicacion=faker.date_between(start_date='-50y', end_date='today'),
-            libVolumen=random.randint(1, 5),
-            libSinopsis=faker.text(max_nb_chars=255),
-            libURLLibro=faker.url(),
-            libFoto=faker.image_url(),  # Cambiar si usas imágenes locales
-            libStatus=random.choice([True, False]),
-            libPrecio=round(random.uniform(5.0, 100.0), 2),  # Precio aleatorio entre 5 y 100
-        )
-        print(libro)
-        # Asignar categorías aleatorias al libro
-        if categorias:
-            num_categorias = random.randint(1, 2)  # Cada libro puede tener 1-2 categorías
-            for _ in range(num_categorias):
-                categoria = random.choice(categorias)
-                LibrosXLibreriaCategoria.objects.get_or_create(libro=libro, categoria=categoria)
-    print(f'{num_libros} libros creados.')
+        print(f"Transformación completada. Archivo guardado en: {output_file}")
 
-    categorias = list(LibroCategoria.objects.all())
-    for _ in range(num_libros):
-        libro = Libro.objects.create(
-            libCodigo=faker.unique.lexify(text='LIB???'),
-            libNombre=faker.sentence(nb_words=4),
-            libAutor=faker.name(),
-            libFechaPublicacion=faker.date_between(start_date='-50y', end_date='today'),
-            libVolumen=random.randint(1, 5),
-            libSinopsis=faker.text(max_nb_chars=255),
-            libURLLibro=faker.url(),
-            libFoto=faker.image_url(),  # Cambiar si usas imágenes locales
-            libStatus=random.choice([True, False]),
-            libPrecio=round(random.uniform(5.0, 100.0), 2),  # Asignar precio aleatorio entre 5 y 100
-        )
-        # Asignar categorías aleatorias al libro
-        if categorias:
-            num_categorias = random.randint(1, 2)  # Cada libro puede tener 1-2 categorías
-            for _ in range(num_categorias):
-                categoria = random.choice(categorias)
-                LibrosXLibreriaCategoria.objects.get_or_create(libro=libro, categoria=categoria)
-    print(f'{num_libros} libros creados.')
+    except FileNotFoundError:
+        print(f"El archivo {input_file} no se encontró. Verifica el path e inténtalo nuevamente.")
+    except Exception as e:
+        print(f"Ocurrió un error: {e}")
 
-# Crear categorías de productos de carta
-def create_carta_categorias():
-    categorias = ['Café', 'Té', 'Postres', 'Snacks', 'Bebidas Frías']
-    for categoria in categorias:
-        CartaCategoria.objects.get_or_create(
-            carxcatCodigo=faker.unique.lexify(text='CARCAT???'),
-            carxcatNombre=categoria,
-            carxcatStatus=random.choice(['ACT', 'INA'])
-        )
-    print(f'{len(categorias)} categorías de carta creadas.')
 
-# Crear productos de carta
-def create_cartas(num_cartas=50):
-    categorias = list(CartaCategoria.objects.filter(carxcatStatus='ACT'))  # Solo categorías activas
-    for _ in range(num_cartas):
-        carta = Carta.objects.create(
-            carCodigo=faker.unique.lexify(text='CAR???'),
-            carNombre=faker.sentence(nb_words=3),
-            carDescripcion=faker.text(max_nb_chars=255),
-            carPrecio=round(random.uniform(1.0, 50.0), 2),
-            carFoto=faker.image_url(),  # Cambiar si usas imágenes locales
-            carStatus_1=random.choice(['ACT', 'INA']),
-        )
-        # Asignar categorías aleatorias al producto
-        if categorias:
-            num_categorias = random.randint(1, 2)  # Cada producto puede tener 1-2 categorías
-            for _ in range(num_categorias):
-                categoria = random.choice(categorias)
-                RelCartaCategoria.objects.get_or_create(carta=carta, categoria=categoria)
-    print(f'{num_cartas} productos de carta creados.')
+# Ejemplo de uso
+if __name__ == "__main__":
+    # Ruta de entrada y salida
+    input_file = r"C:\Users\Carlos\Desktop\Variados\Portafolio\BibliotecaStandFreeDjango\BibliotecaStandFree\SQL_DATA_DJANGO_DUMP.sql"
+    output_file = r"C:\Users\Carlos\Desktop\Variados\Portafolio\BibliotecaStandFreeDjango\BibliotecaStandFree\SQL_DATA_DJANGO_DUMP_TRANSFORMED.sql"
 
-# Ejecutar los scripts de generación
-def run():
-    print('Creando datos falsos...')
-    create_libro_categorias()
-    create_libros(num_libros=50)  # Genera 50 libros
-    create_carta_categorias()
-    create_cartas(num_cartas=50)  # Genera 50 productos de carta
-    print('Datos falsos creados exitosamente.')
-
-if __name__ == '__main__':
-    run()
+    # Llamar a la función de transformación
+    transform_sql_file(input_file, output_file)
