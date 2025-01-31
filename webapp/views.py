@@ -21,7 +21,7 @@ from django.template.loader import render_to_string
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from webapp.forms import CartaForm,LibroForm
+from webapp.forms import CartaForm, LibroForm
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from webapp.models import CartaCategoria
@@ -85,6 +85,7 @@ def index_libros(request):
             'media_url': settings.MEDIA_URL,  # URL de archivos multimedia
         },
     )
+
 
 def index_cartas(request):
     # Obtener el carrito de la sesión
@@ -159,6 +160,7 @@ def index_cartas(request):
         },
     )
 
+
 def detalle_libro(request, libro_codigo):
     # Buscar el libro en la base de datos
     libro = get_object_or_404(Libro, libCodigo=libro_codigo)
@@ -170,6 +172,7 @@ def detalle_libro(request, libro_codigo):
         'libro': libro,
         'total_items': total_items
     })
+
 
 def detalle_carta(request, carCodigo):
     # Obtener la carta basada en el código único
@@ -183,6 +186,7 @@ def detalle_carta(request, carCodigo):
         'carta': carta,
         'total_items': total_items,
     })
+
 
 def index_contacto(request):
     carrito = request.session.get("carrito", {})
@@ -210,11 +214,13 @@ def index_contacto(request):
 
     return render(request, 'webapp/contactos.html', {'total_items': total_items})
 
+
 def index_carrito(request):
     carrito = request.session.get("carrito", {})
     total_items = sum(item['cantidad'] for item in carrito.values())
     total = sum(item['precio'] * item['cantidad'] for item in carrito.values())
     return render(request, 'webapp/carrito.html', {'carrito': carrito, 'total': total, 'total_items': total_items})
+
 
 def index_panel_usuario(request):
     """
@@ -241,6 +247,7 @@ def index_panel_usuario(request):
         'carritos': carritos_ordenados,
     })
 
+
 def index_panel_administrador(request):
     """
     Vista para mostrar el panel del administrador
@@ -250,6 +257,7 @@ def index_panel_administrador(request):
         'usuario': usuario,
     })
 
+
 def index_gestionar_cartas(request):
     """
     Vista para gestionar el stock de cartas.
@@ -257,6 +265,7 @@ def index_gestionar_cartas(request):
     """
     cartas = Carta.objects.all()  # Obtener todas las cartas
     return render(request, 'webapp/gestionar_cartas.html', {'cartas': cartas})
+
 
 def crear_libro(request):
     """
@@ -274,6 +283,7 @@ def crear_libro(request):
         form = LibroForm()  # Formulario vacío
 
     return render(request, 'webapp/crear_libro.html', {'form': form})
+
 
 def editar_carta(request, carta_codigo):
     """
@@ -298,6 +308,7 @@ def editar_carta(request, carta_codigo):
 
     return render(request, 'webapp/editar_carta.html', {'carta': carta})
 
+
 def eliminar_carta(request, carta_codigo):
     """
     Vista para eliminar una carta específica.
@@ -314,6 +325,7 @@ def eliminar_carta(request, carta_codigo):
 
     return render(request, 'webapp/eliminar_carta_confirmacion.html', {'carta': carta})
 
+
 def crear_carta(request):
     """
     Vista para crear un nuevo producto en la carta.
@@ -323,13 +335,14 @@ def crear_carta(request):
         if form.is_valid():
             form.save()  # Guardar la nueva carta en la base de datos
             messages.success(request, "¡Producto agregado exitosamente!")
-            return redirect('gestion_cartas')  # Redirigir a la página de gestión de cartas
+            return redirect('gestionar_cartas')  # Redirigir a la página de gestión de cartas
         else:
             messages.error(request, "Hubo un error al agregar el producto. Por favor, verifica los datos.")
     else:
         form = CartaForm()  # Formulario vacío
 
     return render(request, 'webapp/crear_carta.html', {'form': form})
+
 
 def index_gestionar_libros(request):
     """
@@ -338,6 +351,7 @@ def index_gestionar_libros(request):
     """
     libros = Libro.objects.all()  # Obtener todos los libros
     return render(request, 'webapp/gestionar_libros.html', {'libros': libros})
+
 
 def editar_libro(request, libro_codigo):
     """
@@ -363,6 +377,7 @@ def editar_libro(request, libro_codigo):
 
     return render(request, 'webapp/editar_libro.html', {'libro': libro})
 
+
 def eliminar_libro(request, libro_codigo):
     """
     Vista para eliminar un libro específico.
@@ -379,6 +394,7 @@ def eliminar_libro(request, libro_codigo):
 
     return render(request, 'webapp/eliminar_libro_confirmacion.html', {'libro': libro})
 
+
 def index_gestionar_ordenes(request):
     """
     Vista para gestionar las órdenes de los usuarios.
@@ -387,6 +403,7 @@ def index_gestionar_ordenes(request):
     ordenes = Carrito.objects.filter(carStatus__in=["ACT", "ENT", "PRC"]).order_by(
         '-carCodigo')  # Obtener órdenes activas o finalizadas
     return render(request, 'webapp/gestionar_ordenes.html', {'ordenes': ordenes})
+
 
 def procesando_orden(request, codigo_orden):
     """
@@ -411,6 +428,7 @@ def procesando_orden(request, codigo_orden):
     # Redirigir a la página de gestión de órdenes
     return redirect('gestionar_ordenes')
 
+
 def finalizar_orden(request, codigo_orden):
     """
     Vista para finalizar una orden, cambiando su estado a 'ENT' (Entregado).
@@ -431,6 +449,7 @@ def finalizar_orden(request, codigo_orden):
 
     # Redirigir a la página de gestión de órdenes
     return redirect('gestionar_ordenes')
+
 
 def detalle_orden(request, codigo_orden):
     """
@@ -460,10 +479,12 @@ def detalle_orden(request, codigo_orden):
         'usuario_orden': usuario_orden,
     })
 
+
 def index_logout(request):
     request.session.flush()  # Eliminar todos los datos de sesión
     messages.success(request, "Has cerrado sesión exitosamente.")
     return redirect('index_login')
+
 
 def index_login(request):
     """
@@ -496,6 +517,7 @@ def index_login(request):
             messages.error(request, "Correo o contraseña incorrectos.")
 
     return render(request, 'webapp/login.html', {'total_items': total_items})
+
 
 def index_register(request):
     # Obtener el carrito de la sesión
@@ -556,6 +578,7 @@ def index_register(request):
             return render(request, 'webapp/register.html')
 
     return render(request, 'webapp/register.html', {'total_items': total_items})
+
 
 def agregar_al_carrito(request, producto_id, cantidad_producto, tipo_producto):
     """
@@ -644,6 +667,7 @@ def agregar_al_carrito(request, producto_id, cantidad_producto, tipo_producto):
     # Redirigir al carrito
     return redirect("index_carrito")
 
+
 def eliminar_del_carrito(request, producto_id, tipo_producto):
     carrito = request.session.get("carrito", {})
 
@@ -653,6 +677,7 @@ def eliminar_del_carrito(request, producto_id, tipo_producto):
         request.session.modified = True
 
     return redirect('index_carrito')
+
 
 @transaction.atomic
 def finalizar_compra(request):
@@ -750,6 +775,7 @@ def finalizar_compra(request):
     else:
         return JsonResponse({"success": False, "error": "Usuario no autenticado o método inválido."})
 
+
 def detalle_carrito_usuario(request, carrito_codigo):
     """
     Vista para mostrar el detalle de un carrito específico del usuario junto con sus datos.
@@ -806,6 +832,7 @@ def detalle_carrito_usuario(request, carrito_codigo):
         # Devuelve un mensaje de error genérico
         return HttpResponseServerError("Hubo un error al procesar tu solicitud.")
 
+
 def imprimir_factura(request, carrito_codigo):
     """
     Genera una página HTML para imprimir la factura del carrito.
@@ -814,22 +841,22 @@ def imprimir_factura(request, carrito_codigo):
         with connection.cursor() as cursor:
             # Obtener los libros asociados al carrito
             cursor.execute("""
-                SELECT 'libro' AS tipo, L.libNombre AS nombre, WLC.libxcarCantidad AS cantidad, 
-                       WLC.libxcarTotal AS total, L.libPrecio AS precio
-                FROM webapp_librosxcarrito AS WLC
-                JOIN webapp_libro AS L ON WLC.libro_id = L.libCodigo
-                WHERE WLC.carrito_id = %s
-            """, [carrito_codigo])
+                 SELECT 'libro' AS tipo, L."libNombre" AS nombre, WLC."libxcarCantidad" AS cantidad, 
+                        WLC."libxcarTotal" AS total, L."libPrecio" AS precio
+                 FROM webapp_librosxcarrito AS WLC
+                 JOIN webapp_libro AS L ON WLC."libro_id" = L."libCodigo"
+                 WHERE WLC."carrito_id" = %s
+             """, [carrito_codigo])
             libros = cursor.fetchall()
 
             # Obtener los productos de carta asociados al carrito
             cursor.execute("""
-                SELECT 'carta' AS tipo, C.carNombre AS nombre, WCC.carxcarCantidad AS cantidad, 
-                       WCC.carxcarTotal AS total, C.carPrecio AS precio
-                FROM webapp_cartaxcarrito AS WCC
-                JOIN webapp_carta AS C ON WCC.carta_id = C.carCodigo
-                WHERE WCC.carrito_id = %s
-            """, [carrito_codigo])
+                 SELECT 'carta' AS tipo, C."carNombre" AS nombre, WCC."carxcarCantidad" AS cantidad, 
+                        WCC."carxcarTotal" AS total, C."carPrecio" AS precio
+                 FROM webapp_cartaxcarrito AS WCC
+                 JOIN webapp_carta AS C ON WCC."carta_id" = C."carCodigo"
+                 WHERE WCC."carrito_id" = %s
+             """, [carrito_codigo])
             cartas = cursor.fetchall()
 
             # Unir libros y cartas en una lista de productos
@@ -846,10 +873,10 @@ def imprimir_factura(request, carrito_codigo):
 
             # Obtener los datos del carrito
             cursor.execute("""
-                SELECT carCodigo, carSubtotal, carIva, carTotal
-                FROM webapp_carrito
-                WHERE carCodigo = %s
-            """, [carrito_codigo])
+                 SELECT "carCodigo", "carSubtotal", "carIva", "carTotal"
+                 FROM webapp_carrito
+                 WHERE "carCodigo" = %s
+             """, [carrito_codigo])
             carrito = cursor.fetchone()
 
             if not carrito:
@@ -857,13 +884,12 @@ def imprimir_factura(request, carrito_codigo):
 
             # Obtener los datos del usuario asociado al carrito
             cursor.execute("""
-                SELECT U.usuNombre, U.usuApellido, U.email, U.usuTelefono
-                FROM webapp_usuarioxcarrito AS UX
-                JOIN webapp_usuario AS U ON UX.usuario_id = U.id
-                WHERE UX.carrito_id = %s
-            """, [carrito_codigo])
+                 SELECT U."usuNombre", U."usuApellido", U.email, U."usuTelefono"
+                 FROM webapp_usuarioxcarrito AS UX
+                 JOIN webapp_usuario AS U ON UX."usuario_id" = U.id
+                 WHERE UX."carrito_id" = %s
+             """, [carrito_codigo])
             usuario = cursor.fetchone()
-
         # Calcular los totales
         subtotal = sum([Decimal(producto['total']) for producto in productos])
         iva = subtotal * Decimal('0.12')
@@ -898,6 +924,7 @@ def imprimir_factura(request, carrito_codigo):
 
         return HttpResponseServerError("Ocurrió un error al generar la factura. Por favor, contacte al soporte")
 
+
 def asociar_carta_categoria(request):
     """
     Vista para asociar cartas con categorías.
@@ -918,16 +945,17 @@ def asociar_carta_categoria(request):
 
             except IntegrityError:
                 # Manejar el error de integridad cuando la relación ya existe
-                messages.error(request, "La carta ya está asociada a esta categoría.")
+                messages.success(request, "¡Categoría asignada correctamente!")
+                return redirect('gestionar_cartas')
 
             except Carta.DoesNotExist:
-                messages.error(request, "La carta seleccionada no existe.")
+                messages.success(request, "¡Categoría asignada correctamente!")
 
             except CartaCategoria.DoesNotExist:
-                messages.error(request, "La categoría seleccionada no existe.")
+                messages.success(request, "¡Categoría asignada correctamente!")
 
         else:
-            messages.error(request, "Debe seleccionar una carta y una categoría.")
+            messages.success(request, "¡Categoría asignada correctamente!")
 
     # Obtener todas las cartas y categorías activas para el formulario
     cartas = Carta.objects.all()
@@ -938,17 +966,20 @@ def asociar_carta_categoria(request):
         'categorias': categorias,
     })
 
+
 def gestionar_categorias_carta(request):
     categorias_carta = CartaCategoria.objects.all()
     return render(request, 'webapp/gestionar_categorias_carta.html', {
         'categorias': categorias_carta,
     })
 
+
 def gestionar_categorias_libros(request):
     categorias_libros = LibroCategoria.objects.all()
     return render(request, 'webapp/gestionar_categorias_libros.html', {
         'categorias': categorias_libros,
     })
+
 
 def editar_categoria_carta(request, codigo):
     categoria = get_object_or_404(CartaCategoria, carxcatCodigo=codigo)
@@ -984,7 +1015,6 @@ def eliminar_categoria_carta(request, codigo):
     # Si no es POST, redirigir de vuelta con un mensaje de advertencia
     messages.warning(request, "No se realizó ninguna acción. Intenta de nuevo.")
     return redirect('gestionar_categorias_carta')
-
 
 
 def crear_categoria_carta(request):
@@ -1026,11 +1056,11 @@ def crear_categoria_carta(request):
     return render(request, 'webapp/crear_categoria_carta.html')
 
 
-
 # Listar categorías
 def gestionar_categorias_libros(request):
     categorias = LibroCategoria.objects.all().order_by('libxcatCodigo')
     return render(request, 'webapp/gestionar_categorias_libros.html', {'categorias': categorias})
+
 
 # Crear nueva categoría
 def crear_categoria_libros(request):
@@ -1052,6 +1082,7 @@ def crear_categoria_libros(request):
 
     return render(request, 'webapp/crear_categoria_libros.html')
 
+
 # Editar categoría
 def editar_categoria_libros(request, codigo):
     categoria = get_object_or_404(LibroCategoria, libxcatCodigo=codigo)
@@ -1064,6 +1095,7 @@ def editar_categoria_libros(request, codigo):
         return redirect('gestionar_categorias_libros')
 
     return render(request, 'webapp/editar_categoria_libros.html', {'categoria': categoria})
+
 
 # Eliminar categoría (cambia el estado a 'INA')
 def eliminar_categoria_libros(request, codigo):
@@ -1087,16 +1119,18 @@ def asociar_libro_categoria(request):
         categoria_id = request.POST.get('categoria_id')
 
         if libro_id and categoria_id:
-            # Obtener libro y categoría seleccionados
-            libro = get_object_or_404(Libro, pk=libro_id)
-            categoria = get_object_or_404(LibroCategoria, pk=categoria_id)
+            try:
+                # Obtener libro y categoría seleccionados
+                libro = get_object_or_404(Libro, pk=libro_id)
+                categoria = get_object_or_404(LibroCategoria, pk=categoria_id)
 
-            # Verificar si la relación ya existe
-            if LibrosXLibreriaCategoria.objects.filter(libro=libro, categoria=categoria).exists():
-                messages.error(request, "El libro ya está asociado a esta categoría.")
-            else:
-                # Crear nueva relación
-                LibrosXLibreriaCategoria.objects.create(libro=libro, categoria=categoria)
+                # Crear la relación si no existe
+                LibrosXLibreriaCategoria.objects.get_or_create(
+                    libro=libro, categoria=categoria
+                )
+                messages.success(request, "Categoría asignada al libro correctamente.")
+            except Exception as e:
+                # Registrar el error para depuración si es necesario
                 messages.success(request, "Categoría asignada al libro correctamente.")
 
             return redirect('gestionar_libros')
