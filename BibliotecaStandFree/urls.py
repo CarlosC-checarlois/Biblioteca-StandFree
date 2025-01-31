@@ -57,9 +57,48 @@ urlpatterns = [
                        name='finalizar_orden'),
                   path('gestionar/ordenes/detalle/<str:codigo_orden>/', webapp_views.detalle_orden,
                        name='detalle_orden'),
+                  path('gestionar/ordenes/procesar/<str:codigo_orden>/', webapp_views.procesando_orden,
+                       name='procesando_orden'),
+                  # Nueva ruta
 
                   path('carrito/agregar/<str:producto_id>/<int:cantidad_producto>/<str:tipo_producto>/',
                        webapp_views.agregar_al_carrito, name='agregar_al_carrito'),
+
+                  path('panel-usuario/', webapp_views.index_panel_usuario, name='panel_usuario'),
+                  path('detalle-carrito/<str:carrito_codigo>/', webapp_views.detalle_carrito_usuario,
+                       name='detalle_carrito_usuario'),
+                  path('imprimir-factura/<str:carrito_codigo>/', webapp_views.imprimir_factura,
+                       name='imprimir_factura'),
+                  path('crear-carta/', webapp_views.crear_carta, name='crear_carta'),
+                  path('crear-libro/', webapp_views.crear_libro, name='crear_libro'),
+
+                  # Otras rutas
+                  path('categorias-carta/', webapp_views.gestionar_categorias_carta, name='gestionar_categorias_carta'),
+                  path('categorias-libros/', webapp_views.gestionar_categorias_libros,
+                       name='gestionar_categorias_libros'),
+                  path('asociar-carta-categoria/', webapp_views.asociar_carta_categoria,
+                       name='asociar_carta_categoria'),
+
+                  # Ruta para gestionar categorías de carta
+                  path('categorias-carta/', webapp_views.gestionar_categorias_carta, name='gestionar_categorias_carta'),
+
+                  # Ruta para editar una categoría de carta
+                  path('categorias-carta/editar/<str:codigo>/', webapp_views.editar_categoria_carta,
+                       name='editar_categoria_carta'),
+
+                  # Ruta para eliminar una categoría de carta
+                  path('categorias-carta/eliminar/<str:codigo>/', webapp_views.eliminar_categoria_carta,
+                       name='eliminar_categoria_carta'),
+                  path('crear-categoria-carta/', webapp_views.crear_categoria_carta, name='crear_categoria_carta'),
+
+                  path('categorias-libros/', webapp_views.gestionar_categorias_libros,
+                       name='gestionar_categorias_libros'),
+                  path('categorias-libros/crear/', webapp_views.crear_categoria_libros, name='crear_categoria_libros'),
+                  path('categorias-libros/editar/<str:codigo>/', webapp_views.editar_categoria_libros,
+                       name='editar_categoria_libros'),
+                  path('categorias-libros/eliminar/<str:codigo>/', webapp_views.eliminar_categoria_libros,
+                       name='eliminar_categoria_libros'),
+                  path('asociar-libro-categoria/', webapp_views.asociar_libro_categoria, name='asociar_libro_categoria'),
 
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
               + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
@@ -67,5 +106,6 @@ urlpatterns = [
 
 def custom_404_view(request, exception):
     return render(request, '404.html', status=404)
+
 
 handler404 = custom_404_view

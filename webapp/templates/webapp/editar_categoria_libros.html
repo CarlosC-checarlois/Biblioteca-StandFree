@@ -1,0 +1,216 @@
+{% extends "cabezal.html" %}
+{% block cargar_static %}
+    {% load static %}
+{% endblock %}
+{% block css_archivos %}
+    <style>
+        /* Estilo del botón flotante */
+        .btn-flotante {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 60px;
+            height: 60px;
+            background-color: #28a745; /* Verde */
+            color: #fff;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            text-decoration: none;
+            z-index: 1000;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-flotante:hover {
+            background-color: #218838; /* Verde más oscuro */
+            transform: scale(1.1); /* Aumentar ligeramente */
+        }
+
+        /* Ajuste para pantallas más pequeñas */
+        @media (max-width: 768px) {
+            .btn-flotante {
+                width: 50px;
+                height: 50px;
+                font-size: 25px;
+            }
+        }
+    </style>
+    {% comment %}
+    CSS del boton del wssp
+    {% endcomment %}
+    <style>
+        .btn-wsp {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 25px;
+            right: 25px;
+            background: #fff;
+            color: #FFF;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 35px;
+            box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            transition: all 300ms ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-wsp:hover {
+            background: #d0ffd9;
+        }
+
+        .btn-wsp img {
+            width: 100%; /* Hace que la imagen ocupe todo el ancho del contenedor */
+            height: 100%; /* Hace que la imagen ocupe toda la altura del contenedor */
+            object-fit: cover; /* Ajusta la imagen para llenar completamente el contenedor sin distorsionar */
+            border-radius: 50%; /* Mantiene el borde redondeado de la imagen */
+        }
+
+        @media only screen and (min-width: 320px) and (max-width: 768px) {
+            .btn-wsp {
+                width: 63px;
+                height: 63px;
+            }
+
+            .btn-wsp img {
+                width: 100%; /* Ajusta el tamaño para que llene el nuevo tamaño del botón */
+                height: 100%; /* Ajusta el tamaño para que llene el nuevo tamaño del botón */
+            }
+        }
+
+    </style>
+    <link rel="stylesheet" href="{% static 'webapp/css/styles_administrador_tablas.css' %}"/>
+    <style>
+        /* Fondo general */
+        body {
+            background: linear-gradient(to bottom, #ffe4c4, #f5deb3);
+            font-family: 'Arial', sans-serif;
+            color: #4a4a4a;
+        }
+
+        /* Contenedor del formulario */
+        .container {
+            background: #fff;
+            border-radius: 10px;
+            padding: 25px 40px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            margin: 20px auto;
+        }
+
+        /* Título */
+        h2 {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #6b4f38;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Etiquetas */
+        form label {
+            font-weight: bold;
+            color: #6b4f38;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        /* Campos del formulario */
+        form input[type="text"],
+        form select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: #fdfdfd;
+            transition: border-color 0.3s ease;
+        }
+
+        form input:focus,
+        form select:focus {
+            border-color: #6b4f38;
+            outline: none;
+            box-shadow: 0 0 5px rgba(107, 79, 56, 0.5);
+        }
+
+        /* Botones */
+        form button,
+        form a.btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        /* Botón Guardar Cambios */
+        form button.btn-success {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+        }
+
+        form button.btn-success:hover {
+            background-color: #218838;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Botón Cancelar */
+        form a.btn-secondary {
+            background-color: #6c757d;
+            color: #fff;
+        }
+
+        form a.btn-secondary:hover {
+            background-color: #5a6268;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Responsividad */
+        @media (max-width: 768px) {
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            form button,
+            form a.btn {
+                font-size: 14px;
+                padding: 8px 15px;
+            }
+        }
+    </style>
+{% endblock %}
+{% block contenido_pagina %}
+    <div class="container mt-5">
+        <h2>Editar Categoría de Libros</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" class="form-control" value="{{ categoria.libxcatNombre }}"
+                       required>
+            </div>
+            <div class="form-group mt-3">
+                <label for="estado">Estado:</label>
+                <select id="estado" name="estado" class="form-control">
+                    <option value="ACT" {% if categoria.libxcatStatus == 'ACT' %}selected{% endif %}>Activo</option>
+                    <option value="INA" {% if categoria.libxcatStatus == 'INA' %}selected{% endif %}>Inactivo</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-success mt-4">Guardar Cambios</button>
+            <a href="{% url 'gestionar_categorias_libros' %}" class="btn btn-secondary mt-4">Cancelar</a>
+        </form>
+    </div>
+{% endblock %}

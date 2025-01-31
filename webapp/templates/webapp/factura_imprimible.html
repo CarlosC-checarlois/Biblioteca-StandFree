@@ -1,0 +1,246 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factura - {{ carrito.carCodigo }}</title>
+    <style>
+        /* General */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        /* Cabecera */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .header-logo img {
+            max-height: 60px;
+        }
+
+        .header-info {
+            text-align: right;
+        }
+
+        .header-info h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #6b4f38; /* Marrón café */
+        }
+
+        .header-info p {
+            margin: 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Título */
+        .invoice-title {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #6b4f38;
+        }
+
+        /* Tablas */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f7f3ef;
+            text-transform: uppercase;
+            color: #6b4f38;
+            font-size: 14px;
+            padding: 10px;
+        }
+
+        td {
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* Totales */
+        .totales {
+            text-align: right;
+            margin-top: 10px;
+            border-top: 2px solid #ddd;
+            padding-top: 10px;
+        }
+
+        .totales p {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        .totales .total {
+            font-weight: bold;
+            font-size: 18px;
+            color: #b35a1f; /* Marrón cálido */
+        }
+
+        /* Botón */
+        .btn-imprimir {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            text-align: center;
+            background-color: #b35a1f;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            width: fit-content;
+        }
+
+        .btn-imprimir:hover {
+            background-color: #8a4417;
+        }
+
+        /* Estilo para impresión */
+        @media print {
+            body {
+                background-color: #ffffff;
+                -webkit-print-color-adjust: exact; /* Forzar colores al imprimir */
+                print-color-adjust: exact;
+            }
+
+            .container {
+                box-shadow: none;
+                border: 1px solid #ccc;
+                padding: 20px;
+            }
+
+            .header-logo img {
+                max-height: 50px;
+            }
+
+            .btn-imprimir {
+                display: none; /* Oculta el botón al imprimir */
+            }
+
+            th {
+                background-color: #f7f3ef !important;
+                -webkit-print-color-adjust: exact;
+            }
+
+            td, th {
+                border: 1px solid #ddd;
+            }
+
+            .totales p {
+                font-size: 16px;
+                color: #000;
+            }
+
+            .totales .total {
+                font-weight: bold;
+                font-size: 18px;
+                color: #b35a1f;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Cabecera -->
+    <div class="header">
+        <div class="header-logo">
+            <img src="{% static 'webapp/images/generales/Logo_cafe.png' %}" alt="Logo Empresa">
+        </div>
+        <div class="header-info">
+            <h2>BibliotecaStandFree</h2>
+            <p>Dirección: Calle Principal 123, Ciudad</p>
+            <p>Teléfono: +123 456 7890</p>
+            <p>Correo: info@cafeterialibreria.com</p>
+        </div>
+    </div>
+
+    <!-- Información del Cliente -->
+    <div class="customer-info">
+        <h3>Información del Cliente</h3>
+        <p><strong>Nombre:</strong> {{ usuario.usuNombre }} {{ usuario.usuApellido }}</p>
+        <p><strong>Correo:</strong> {{ usuario.email }}</p>
+        <p><strong>Teléfono:</strong> {{ usuario.usuTelefono|default:"No disponible" }}</p>
+        <p><strong>Dirección:</strong> {{ usuario.usuDireccion|default:"No especificada" }}</p>
+    </div>
+
+    <!-- Factura -->
+    <div class="invoice-title">
+        Factura del Carrito: {{ carrito.carCodigo }}
+    </div>
+
+    <!-- Productos -->
+    <h3>Productos:</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Cantidad</th>
+            <th>Precio Unitario</th>
+            <th>Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for producto in productos %}
+            <tr>
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.cantidad }}</td>
+                <td>${{ producto.precio }}</td>
+                <td>${{ producto.total }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="4">No hay productos en este carrito.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Totales -->
+    <div class="totales">
+        <p><strong>Subtotal:</strong> ${{ subtotal }}</p>
+        <p><strong>IVA (12%):</strong> ${{ iva }}</p>
+        <p class="total"><strong>Total:</strong> ${{ total }}</p>
+    </div>
+
+    <!-- Botón -->
+    <a href="#" class="btn-imprimir" onclick="window.print()">Imprimir Factura</a>
+</div>
+
+</body>
+</html>

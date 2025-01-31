@@ -1,0 +1,215 @@
+{% extends "cabezal.html" %}
+{% block cargar_static %}
+    {% load static %}
+{% endblock %}
+{% block css_archivos %}
+    <style>
+        /* Estilo del botón flotante */
+        .btn-flotante {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 60px;
+            height: 60px;
+            background-color: #28a745; /* Verde */
+            color: #fff;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            text-decoration: none;
+            z-index: 1000;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-flotante:hover {
+            background-color: #218838; /* Verde más oscuro */
+            transform: scale(1.1); /* Aumentar ligeramente */
+        }
+
+        /* Ajuste para pantallas más pequeñas */
+        @media (max-width: 768px) {
+            .btn-flotante {
+                width: 50px;
+                height: 50px;
+                font-size: 25px;
+            }
+        }
+    </style>
+    {% comment %}
+    CSS del boton del wssp
+    {% endcomment %}
+    <style>
+        .btn-wsp {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 25px;
+            right: 25px;
+            background: #fff;
+            color: #FFF;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 35px;
+            box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            transition: all 300ms ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-wsp:hover {
+            background: #d0ffd9;
+        }
+
+        .btn-wsp img {
+            width: 100%; /* Hace que la imagen ocupe todo el ancho del contenedor */
+            height: 100%; /* Hace que la imagen ocupe toda la altura del contenedor */
+            object-fit: cover; /* Ajusta la imagen para llenar completamente el contenedor sin distorsionar */
+            border-radius: 50%; /* Mantiene el borde redondeado de la imagen */
+        }
+
+        @media only screen and (min-width: 320px) and (max-width: 768px) {
+            .btn-wsp {
+                width: 63px;
+                height: 63px;
+            }
+
+            .btn-wsp img {
+                width: 100%; /* Ajusta el tamaño para que llene el nuevo tamaño del botón */
+                height: 100%; /* Ajusta el tamaño para que llene el nuevo tamaño del botón */
+            }
+        }
+
+    </style>
+    <link rel="stylesheet" href="{% static 'webapp/css/styles_administrador_tablas.css' %}"/>
+
+    <style>
+        /* Estilo del botón flotante */
+        .btn-flotante {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 60px;
+            height: 60px;
+            background-color: #28a745; /* Verde */
+            color: #fff;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            text-decoration: none;
+            z-index: 1000;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-flotante:hover {
+            background-color: #218838; /* Verde más oscuro */
+            transform: scale(1.1); /* Aumentar ligeramente */
+        }
+
+        /* Ajuste para pantallas más pequeñas */
+        @media (max-width: 768px) {
+            .btn-flotante {
+                width: 50px;
+                height: 50px;
+                font-size: 25px;
+            }
+        }
+
+        /* Estilo del formulario */
+        .container {
+            max-width: 600px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #4a4a4a;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #333333;
+        }
+
+        .form-control {
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            padding: 10px;
+            transition: border-color 0.3s ease-in-out;
+        }
+
+        .form-control:focus {
+            border-color: #28a745;
+            box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
+        }
+
+        .btn {
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: #ffffff;
+            border: none;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: #ffffff;
+            border: none;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+    </style>
+{% endblock %}
+{% block contenido_pagina %}
+    <div class="container mt-5">
+        <h2>Agregar Nueva Categoría</h2>
+        <form method="post">
+            {% csrf_token %}
+            <!-- Campo para el código de la categoría -->
+            <div class="form-group">
+                <label for="codigo">Código de la Categoría:</label>
+                <input type="text" id="codigo" name="codigo" class="form-control"
+                       placeholder="Ejemplo: CAT001" maxlength="7" required>
+            </div>
+            <!-- Campo para el nombre de la categoría -->
+            <div class="form-group mt-3">
+                <label for="nombre">Nombre de la Categoría:</label>
+                <input type="text" id="nombre" name="nombre" class="form-control"
+                       placeholder="Ingresa el nombre..." maxlength="150" required>
+            </div>
+            <!-- Campo para seleccionar el estado -->
+            <div class="form-group mt-3">
+                <label for="estado">Estado de la Categoría:</label>
+                <select id="estado" name="estado" class="form-control">
+                    <option value="ACT" selected>Activo</option>
+                    <option value="INA">Inactivo</option>
+                </select>
+            </div>
+            <!-- Botones de acción -->
+            <button type="submit" class="btn btn-success mt-4">Crear Categoría</button>
+            <a href="{% url 'gestionar_categorias_carta' %}" class="btn btn-secondary mt-4">Cancelar</a>
+        </form>
+    </div>
+{% endblock %}

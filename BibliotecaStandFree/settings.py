@@ -12,11 +12,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "212q3515")
+SECRET_KEY = "212q3515"
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DJANGO_DEBUG", False)
-
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", '*')
+DEBUG = True
+ALLOWED_HOSTS = "*"
 
 # Application definition
 
@@ -69,15 +68,24 @@ WSGI_APPLICATION = 'BibliotecaStandFree.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.getenv('POSTGRES_DB', 'bibliotecastandfree_8pry'),
+#         'USER': os.getenv('POSTGRES_USER', 'bibliotecastandfreeuser'),
+#         'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'hRkyGOIeoMopkTFdNekmVyYXto71wCkP'),
+#         'HOST': os.getenv('POSTGRES_HOST', 'dpg-cu570s1u0jms73ffhfe0-a.oregon-postgres.render.com'),
+#         'PORT': os.getenv('POSTGRES_PORT', '5432'),
+#     }
+# }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB', 'bibliotecastandfree_8pry'),
-        'USER': os.getenv('POSTGRES_USER', 'bibliotecastandfreeuser'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'hRkyGOIeoMopkTFdNekmVyYXto71wCkP'),
-        'HOST': os.getenv('POSTGRES_HOST', 'dpg-cu570s1u0jms73ffhfe0-a.oregon-postgres.render.com'),
-        'PORT': os.getenv('POSTGRES_PORT', '5432'),
-    }
+    'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
 }
 
 # Password validation

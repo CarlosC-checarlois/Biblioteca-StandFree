@@ -338,6 +338,7 @@
                                     <th>Código de Carrito</th>
                                     <th>Fecha de Modificación</th>
                                     <th>Estado</th>
+                                    <th>Acciones</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -348,6 +349,12 @@
                                             <td>{{ carrito.carrito_codigo }}</td>
                                             <td>{{ carrito.fecha|date:"d/m/Y H:i:s" }}</td>
                                             <td>{{ carrito.estado }}</td>
+                                            <td>
+                                                <a href="{% url 'detalle_carrito_usuario' carrito.carrito_codigo %}"
+                                                   class="btn btn-primary btn-sm">
+                                                    Ver Detalle
+                                                </a>
+                                            </td>
                                         </tr>
                                     {% endfor %}
                                 {% else %}

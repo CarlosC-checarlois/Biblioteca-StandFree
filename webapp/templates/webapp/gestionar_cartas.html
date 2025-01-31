@@ -10,6 +10,65 @@
     CSS del boton del wssp
     {% endcomment %}
     <style>
+
+    /* Botón flotante de asignación */
+.btn-flotante-asignacion {
+    position: fixed;
+    bottom: 95px; /* Espaciado para colocarlo justo encima del botón verde */
+    left: 25px; /* Alineado hacia la izquierda */
+    width: 60px;
+    height: 60px;
+    background-color: #ffc107; /* Amarillo */
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    z-index: 1000;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover en botón flotante de asignación */
+.btn-flotante-asignacion:hover {
+    background-color: #e0a800; /* Amarillo oscuro */
+    transform: scale(1.1); /* Aumentar tamaño al pasar el cursor */
+}
+
+/* Botón flotante de agregar */
+.btn-flotante {
+    position: fixed;
+    bottom: 25px; /* Más abajo */
+    left: 25px; /* Alineado hacia la izquierda */
+    width: 60px;
+    height: 60px;
+    background-color: #28a745; /* Verde */
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    z-index: 1000;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover en botón flotante de agregar */
+.btn-flotante:hover {
+    background-color: #218838; /* Verde oscuro */
+    transform: scale(1.1); /* Aumentar tamaño al pasar el cursor */
+}
+
+    </style>
+    {% comment %}
+    CSS del boton de asignacion
+    {% endcomment %}
+
+    <style>
         .btn-wsp {
             position: fixed;
             width: 60px;
@@ -57,13 +116,13 @@
     <link rel="stylesheet" href="{% static 'webapp/css/styles_administrador_tablas.css' %}"/>
 {% endblock %}
 {% block contenido_pagina %}
-<div class="table-container">
-    <h2 class="text-center my-4">
-        <i class="bi bi-card-text"></i> Gestión de Cartas
-    </h2>
-    <div class="table-responsive">
-        <table class="table">
-            <thead>
+    <div class="table-container">
+        <h2 class="text-center my-4">
+            <i class="bi bi-card-text"></i> Gestión de Cartas
+        </h2>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
                 <tr>
                     <th><i class="bi bi-hash"></i> Código</th>
                     <th><i class="bi bi-card-heading"></i> Nombre</th>
@@ -71,28 +130,41 @@
                     <th><i class="bi bi-box"></i> Cantidad</th>
                     <th><i class="bi bi-tools"></i> Acciones</th>
                 </tr>
-            </thead>
-            <tbody>
+                </thead>
+                <tbody>
                 {% for carta in cartas %}
-                <tr>
-                    <td>{{ carta.carCodigo }}</td>
-                    <td>{{ carta.carNombre }}</td>
-                    <td>S/ {{ carta.carPrecio }}</td>
-                    <td>{{ carta.carCantidad }}</td>
-                    <td>
-                        <div class="action-buttons">
-                            <a href="{% url 'editar_carta' carta.carCodigo %}" class="btn-warning">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            <a href="{% url 'eliminar_carta' carta.carCodigo %}" class="btn-danger">
-                                <i class="bi bi-trash"></i>
-                            </a>
-                        </div>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>{{ carta.carCodigo }}</td>
+                        <td>{{ carta.carNombre }}</td>
+                        <td>S/ {{ carta.carPrecio }}</td>
+                        <td>{{ carta.carCantidad }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{% url 'editar_carta' carta.carCodigo %}" class="btn-warning">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="{% url 'eliminar_carta' carta.carCodigo %}" class="btn-danger">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
                 {% endfor %}
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
+    <!-- Botón Flotante -->
+    <!-- Botón flotante para agregar -->
+    <!-- Botón flotante de asignación -->
+    <a href="{% url 'asociar_carta_categoria' %}"
+       class="btn-flotante-asignacion"
+       title="Asignar Categorías a Cartas">
+        <i class="bi bi-link"></i>
+    </a>
+    <a href="{% url 'crear_carta' %}" class="btn-flotante" title="Agregar Nueva Carta">
+        +
+    </a>
+
+
 {% endblock %}

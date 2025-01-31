@@ -1,0 +1,379 @@
+{% extends "cabezal.html" %}
+{% block cargar_static %}
+    {% load static %}
+{% endblock %}
+{% block titulo_pagina %}
+    <title>Detalle del Carrito</title>
+{% endblock %}
+
+{% block css_archivos %}
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        .btn-wsp {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 25px;
+            right: 25px;
+            background: #fff;
+            color: #FFF;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 35px;
+            box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            transition: all 300ms ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-wsp:hover {
+            background: #d0ffd9;
+        }
+
+        .btn-wsp img {
+            width: 100%; /* Hace que la imagen ocupe todo el ancho del contenedor */
+            height: 100%; /* Hace que la imagen ocupe toda la altura del contenedor */
+            object-fit: cover; /* Ajusta la imagen para llenar completamente el contenedor sin distorsionar */
+            border-radius: 50%; /* Mantiene el borde redondeado de la imagen */
+        }
+
+        @media only screen and (min-width: 320px) and (max-width: 768px) {
+            .btn-wsp {
+                width: 43px;
+                height: 43px;
+            }
+
+            .btn-wsp img {
+                width: 100%; /* Ajusta el tamaño para que llene el nuevo tamaño del botón */
+                height: 100%; /* Ajusta el tamaño para que llene el nuevo tamaño del botón */
+            }
+        }
+
+    </style>
+    <style>
+        /* Estilo general para las tablas */
+        .table-custom {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 16px;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            border-radius: 10px;
+            overflow: hidden; /* Para evitar bordes salientes */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Encabezados de las tablas */
+        .table-custom thead tr {
+            background-color: #343a40;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .table-custom thead th {
+            padding: 12px 15px;
+            border: 1px solid #444; /* Bordes entre encabezados */
+        }
+
+        /* Filas del cuerpo de la tabla */
+        .table-custom tbody tr {
+            border-bottom: 1px solid #dddddd;
+            transition: all 0.2s ease-in-out; /* Transición para hover */
+        }
+
+        .table-custom tbody tr:nth-of-type(odd) {
+            background-color: #f3f3f3;
+        }
+
+        .table-custom tbody tr:nth-of-type(even) {
+            background-color: #ffffff;
+        }
+
+        .table-custom tbody tr:hover {
+            background-color: #e6f7ff; /* Azul claro al hacer hover */
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-custom tbody td {
+            padding: 12px 15px;
+            border: 1px solid #dddddd;
+            color: #333333;
+        }
+
+        /* Resaltado de totales */
+        .table-summary {
+            width: 100%;
+            border: none;
+            margin-top: 15px;
+        }
+
+        .table-summary tr {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .table-summary tr.total {
+            background-color: #007bff; /* Fondo azul */
+            color: #ffffff;
+            font-size: 20px;
+        }
+
+        .table-summary td {
+            padding: 10px;
+            text-align: right;
+        }
+
+        .table-summary td:first-child {
+            text-align: left;
+        }
+
+        /* Estilo para dispositivos pequeños */
+        @media (max-width: 768px) {
+            .table-custom {
+                font-size: 14px;
+            }
+
+            .table-summary {
+                font-size: 16px;
+            }
+        }
+    </style>
+    <style>
+        /* Fondo general */
+        body {
+            background-color: #f3e5d0; /* Beige cálido */
+            font-family: 'Arial', sans-serif;
+            color: #4a3b31; /* Marrón oscuro */
+        }
+
+        /* Contenedor principal */
+        .bg-white {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        /* Títulos */
+        h2, h3 {
+            color: #6b4f38; /* Marrón café */
+            font-family: 'Georgia', serif;
+            margin-bottom: 15px;
+        }
+
+        h2 span {
+            color: #b35a1f; /* Marrón más cálido para destacar */
+        }
+
+        /* Tablas */
+        .table-bordered {
+            border: 2px solid #d7c5ae;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #f7e7d5; /* Beige suave para hover */
+        }
+
+        .table-dark th {
+            background-color: #6b4f38; /* Marrón café oscuro */
+            color: #ffffff;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f9f2e9; /* Fondo alternado */
+        }
+
+        /* Resumen */
+        .table-borderless td {
+            font-size: 18px;
+        }
+
+        .table-borderless tr.total {
+            background-color: #b35a1f; /* Marrón cálido */
+            color: #ffffff; /* Texto blanco */
+            font-size: 20px;
+        }
+
+        /* Botones */
+        .btn-outline-secondary {
+            border: 2px solid #6b4f38;
+            color: #6b4f38;
+            font-weight: bold;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: #6b4f38;
+            color: #ffffff;
+        }
+
+        .btn-primary {
+            background-color: #b35a1f;
+            border: none;
+            font-weight: bold;
+        }
+
+        .btn-primary:hover {
+            background-color: #8a4417;
+            color: #ffffff;
+        }
+
+        /* Responsividad */
+        @media (max-width: 768px) {
+            .bg-white {
+                padding: 15px;
+            }
+
+            .table-borderless td {
+                font-size: 16px;
+            }
+        }
+    </style>
+{% endblock %}
+{% block contenido_pagina %}
+    <main class="container py-5">
+        <div class="p-4 bg-white rounded shadow-lg">
+            <!-- Información del Usuario -->
+            <section class="text-center mb-5">
+                <h1 style="
+                    font-size: 2vw;
+                    font-weight: bold;
+                    background: linear-gradient(to right, #6c683a, #3d2222);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    font-family: 'Dancing Script', cursive;">
+                    Factura de: {{ usuario.usuNombre }} {{ usuario.usuApellido }}
+                </h1>
+                <p><strong>Correo:</strong> {{ usuario.email }}</p>
+                <p><strong>Teléfono:</strong> {{ usuario.usuTelefono|default:"No disponible" }}</p>
+                <p><strong>Dirección:</strong> {{ usuario.usuDireccion|default:"No especificada" }}</p>
+            </section>
+
+            <!-- Encabezado del carrito -->
+            <section class="text-center mb-5">
+                <h2 style="
+                    font-size: 4vw;
+                    font-weight: bold;
+                    background: linear-gradient(to right, #6c683a, #3d2222);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    font-family: 'Dancing Script', cursive;">
+                    Detalle del Carrito: <span>{{ carrito.carCodigo }}</span>
+                </h2>
+            </section>
+
+            <!-- Productos -->
+            <section class="mb-5">
+                <h3 style="
+                    font-size: 3vw;
+                    font-weight: bold;
+                    background: linear-gradient(to right, #6c683a, #3d2222);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    font-family: 'Dancing Script', cursive;">Productos:</h3>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-bordered text-center align-middle">
+                        <thead class="table-dark">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <th>Total</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for producto in productos %}
+                            <tr>
+                                <td>{{ producto.nombre }}</td>
+                                <td>{{ producto.carxcarCantidad }}</td>
+                                <td>${{ producto.precio }}</td>
+                                <td>${{ producto.carxcarTotal }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-muted">No hay productos en este carrito.</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Libros -->
+            <section class="mb-5">
+                <h3 style="
+                    font-size: 3vw;
+                    font-weight: bold;
+                    background: linear-gradient(to right, #6c683a, #3d2222);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    font-family: 'Dancing Script', cursive;">Libros:</h3>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-bordered text-center align-middle">
+                        <thead class="table-dark">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <th>Total</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for libro in libros %}
+                            <tr>
+                                <td>{{ libro.nombre }}</td>
+                                <td>{{ libro.libxcarCantidad }}</td>
+                                <td>${{ libro.precio }}</td>
+                                <td>${{ libro.libxcarTotal }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-muted">No hay libros en este carrito.</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Resumen -->
+            <section>
+                <h3 style="
+                    font-size: 3vw;
+                    font-weight: bold;
+                    background: linear-gradient(to right, #6c683a, #3d2222);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    font-family: 'Dancing Script', cursive;">Resumen:</h3>
+                <div class="table-responsive">
+                    <table class="table table-borderless text-end">
+                        <tr>
+                            <td class="text-start fw-bold">Subtotal:</td>
+                            <td>${{ subtotal }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-start fw-bold">IVA (12%):</td>
+                            <td>${{ iva }}</td>
+                        </tr>
+                        <tr class="total">
+                            <td class="text-start fw-bold">Total:</td>
+                            <td>${{ total }}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="text-center mt-4">
+                    <a href="{% url 'panel_usuario' %}" class="btn btn-outline-secondary btn-lg me-2">Volver</a>
+                    <a href="{% url 'imprimir_factura' carrito.carCodigo %}" class="btn btn-primary btn-lg">Generar Factura</a>
+                </div>
+            </section>
+        </div>
+    </main>
+{% endblock %}
+{% block jvscript_archivos_defer %}
+    <script src="{% static 'webapp/js/main.js' %}"></script>
+    <script src="{% static 'webapp/js/modal.js' %}"></script>
+{% endblock %}

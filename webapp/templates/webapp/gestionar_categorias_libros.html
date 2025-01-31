@@ -1,73 +1,46 @@
 {% extends "cabezal.html" %}
-{% block titulo_pagina %}
-    <title>Gestionar Libros</title>
-{% endblock %}
 {% block cargar_static %}
     {% load static %}
 {% endblock %}
 {% block css_archivos %}
-    {% comment %}
-    CSS del boton del wssp
-    {% endcomment %}
     <style>
-
-        /* Botón flotante de asignación */
-        .btn-flotante-asignacion {
-            position: fixed;
-            bottom: 95px; /* Espaciado para colocarlo justo encima del botón verde */
-            left: 25px; /* Alineado hacia la izquierda */
-            width: 60px;
-            height: 60px;
-            background-color: #ffc107; /* Amarillo */
-            color: #fff;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 30px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            text-decoration: none;
-            z-index: 1000;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-
-        /* Hover en botón flotante de asignación */
-        .btn-flotante-asignacion:hover {
-            background-color: #e0a800; /* Amarillo oscuro */
-            transform: scale(1.1); /* Aumentar tamaño al pasar el cursor */
-        }
-
-        /* Botón flotante de agregar */
+        /* Estilo del botón flotante */
         .btn-flotante {
             position: fixed;
-            bottom: 25px; /* Más abajo */
-            left: 25px; /* Alineado hacia la izquierda */
+            bottom: 20px;
+            left: 20px;
             width: 60px;
             height: 60px;
             background-color: #28a745; /* Verde */
             color: #fff;
             border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 30px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             text-decoration: none;
             z-index: 1000;
             transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
-        /* Hover en botón flotante de agregar */
         .btn-flotante:hover {
-            background-color: #218838; /* Verde oscuro */
-            transform: scale(1.1); /* Aumentar tamaño al pasar el cursor */
+            background-color: #218838; /* Verde más oscuro */
+            transform: scale(1.1); /* Aumentar ligeramente */
         }
 
+        /* Ajuste para pantallas más pequeñas */
+        @media (max-width: 768px) {
+            .btn-flotante {
+                width: 50px;
+                height: 50px;
+                font-size: 25px;
+            }
+        }
     </style>
     {% comment %}
-    CSS del boton de asignacion
+    CSS del boton del wssp
     {% endcomment %}
-
     <style>
         .btn-wsp {
             position: fixed;
@@ -114,39 +87,36 @@
     </style>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'webapp/css/styles_administrador_tablas.css' %}"/>
+
 {% endblock %}
 
 {% block contenido_pagina %}
-    <div class="table-container">
-        <h2 class="text-center my-4">
-            <i class="bi bi-book"></i> Gestión de Libros
-        </h2>
-        <div class="table-responsive">
+    <div class="table-container mt-5">
+        <h2>Gestión de Categorías de Libros</h2>
+        <div class="table-responsive mt-4">
             <table class="table">
                 <thead>
                 <tr>
-                    <th><i class="bi bi-hash"></i> Código</th>
-                    <th><i class="bi bi-bookmark"></i> Nombre</th>
-                    <th><i class="bi bi-person"></i> Autor</th>
-                    <th><i class="bi bi-currency-dollar"></i> Precio</th>
-                    <th><i class="bi bi-box"></i> Cantidad</th>
-                    <th><i class="bi bi-tools"></i> Acciones</th>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for libro in libros %}
+                {% for categoria in categorias %}
                     <tr>
-                        <td>{{ libro.libCodigo }}</td>
-                        <td>{{ libro.libNombre }}</td>
-                        <td>{{ libro.libAutor }}</td>
-                        <td>S/ {{ libro.libPrecio }}</td>
-                        <td>{{ libro.libCantidad }}</td>
+                        <td>{{ categoria.libxcatCodigo }}</td>
+                        <td>{{ categoria.libxcatNombre }}</td>
+                        <td>{{ categoria.get_libxcatStatus_display }}</td>
                         <td>
                             <div class="action-buttons">
-                                <a href="{% url 'editar_libro' libro.libCodigo %}" class="btn-warning">
+                                <a href="{% url 'editar_categoria_libros' categoria.libxcatCodigo %}"
+                                   class="btn-warning">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <a href="{% url 'eliminar_libro' libro.libCodigo %}" class="btn-danger">
+                                <a href="{% url 'eliminar_categoria_libros' categoria.libxcatCodigo %}"
+                                   class="btn-danger">
                                     <i class="bi bi-trash"></i>
                                 </a>
                             </div>
@@ -157,15 +127,5 @@
             </table>
         </div>
     </div>
-    <a href="{% url 'asociar_libro_categoria' %}"
-       class="btn-flotante-asignacion"
-       title="Asignar Categorías a Cartas">
-        <i class="bi bi-link"></i>
-    </a>
-    <a href="{% url 'crear_carta' %}" class="btn-flotante" title="Agregar Nueva Carta">
-        +
-    </a>
-
+    <a href="{% url 'crear_categoria_libros' %}" class="btn-flotante" title="Agregar Categoría">+</a>
 {% endblock %}
-
-

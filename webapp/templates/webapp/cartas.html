@@ -124,6 +124,158 @@
             outline: none;
         }
     </style>
+    {% comment %}Filtros avanzados CSS{% endcomment %}
+    <style>
+        .content {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #6f4e37; /* Marrón café */
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #a97c50; /* Marrón claro */
+        }
+
+        /* Ventana Flotante */
+        .filtro-flotante {
+            position: fixed;
+            top: 50%;
+            right: -350px;
+            transform: translateY(-50%);
+            width: 320px;
+            height: 70%; /* Limitar altura */
+            background-color: #ffffff;
+            border-left: 2px solid #d7c5ae;
+            border-radius: 10px 0 0 10px;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: right 0.3s ease-in-out;
+            overflow: hidden; /* Evitar desbordamiento inicial */
+        }
+
+        .filtro-flotante.abierto {
+            right: 0;
+        }
+
+        .filtro-flotante .encabezado {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #6f4e37; /* Marrón café */
+            border-radius: 10px 0 0 0;
+            color: #ffffff;
+        }
+
+        .filtro-flotante .encabezado h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .filtro-flotante .cerrar-filtro {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+
+        .filtro-flotante .cerrar-filtro:hover {
+            color: #f7efe5; /* Beige claro */
+            transform: scale(1.1);
+        }
+
+        .filtro-flotante form {
+            padding: 20px;
+            height: calc(100% - 50px); /* Ajustar altura sin el encabezado */
+            overflow-y: auto; /* Permitir scroll vertical */
+        }
+
+        .filtro-flotante label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #4a2c2a; /* Marrón oscuro */
+            display: block;
+        }
+
+        .filtro-flotante input,
+        .filtro-flotante button {
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #d7c5ae;
+            border-radius: 5px;
+            font-size: 14px;
+            background-color: #fefaf6; /* Beige claro */
+        }
+
+        .filtro-flotante button {
+            background-color: #6f4e37; /* Marrón café */
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+        }
+
+        .filtro-flotante button:hover {
+            background-color: #5a3c2c; /* Marrón oscuro */
+        }
+
+        .categorias {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .categorias label {
+            padding: 8px 12px;
+            background-color: #fefaf6; /* Beige claro */
+            border: 1px solid #d7c5ae;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .categorias input {
+            display: none;
+        }
+
+        .categorias input:checked + label {
+            background-color: #6f4e37; /* Marrón café */
+            color: #ffffff;
+        }
+
+        /* Botón para abrir */
+        .btn-abrir {
+            font-size: 0.9rem;
+            font-weight: bold;
+            background: rgb(155, 122, 61);
+            background: linear-gradient(90deg, rgba(155, 122, 61, 1) 0%, rgba(94, 44, 44, 1) 100%);
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s ease-in-out;
+            margin: 0 5px; /* Espaciado entre botones */
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); /* Sombra ligera */
+        }
+
+        .btn-abrir:hover {
+            background-color: #5a3c2c; /* Marrón oscuro */
+        }
+
+    </style>
 {% endblock %}
 {% block contenido_pagina %}
     <!-- Sección de Introducción -->
@@ -155,19 +307,25 @@
                     aria-label="Buscar producto"
                     value="{{ search_query|default:'' }}"
             />
+
+            <!-- Selector de tipo de búsqueda -->
             <select id="search-type" aria-label="Tipo de búsqueda">
                 <option value="nombre" {% if search_type == 'nombre' %}selected{% endif %}>Nombre</option>
                 <option value="precio" {% if search_type == 'precio' %}selected{% endif %}>Precio</option>
                 <option value="categoria" {% if search_type == 'categoria' %}selected{% endif %}>Categoría</option>
             </select>
+
+            <!-- Botones de búsqueda -->
             <button id="search-button" onclick="handleSearch()">Buscar</button>
             <button id="reset-button" onclick="handleReset()">Restablecer</button>
+            <button class="btn-abrir" id="btnAbrir">Búsqueda Avanzada</button>
         </div>
+
         <div class="input-hint">
             Ingrese un valor a buscar en el campo de arriba y seleccione el tipo de búsqueda.
         </div>
-        <!-- Lista de Productos -->
         <ul class="book-list" id="product-list">
+
             {% if cartas %}
                 {% for carta in cartas %}
                     <li
@@ -176,12 +334,13 @@
                             data-precio="{{ carta.carPrecio }}"
                             data-categoria="{{ carta.carCategoria }}">
                         <img
-                                src="{% static 'webapp/images/cartas/latte_carta.png' %}"
-                                alt="{{ producto.carNombre }}"
+                                src="{% static 'webapp/images/cartas/cafe_carta.png' %}"
+                                alt="{{ carta.carNombre }}"
                                 class="book-thumb"
                                 style="width: 10%; height: 40%; padding-right: 2%;"
-                                onclick="openModal('{% static 'webapp/images/cartas/latte_carta.png' %}')"
+                                onclick="openModal('{{ carta.carFotoUrl }}')"
                         />
+
                         <div class="menu-details">
                             <h3><strong>{{ carta.carNombre }}</strong></h3>
                             <p>{{ carta.carDescripcion|truncatechars:70 }}</p>
@@ -197,35 +356,63 @@
                                         class="spinbox"
                                         style="width: 60px; margin-left: 5px;"/>
                             </div>
-
-                            <!-- Botones de acción -->
                             <div class="book-details">
                                 <a href="{% url 'detalle_carta' carta.carCodigo %}" class="boton"
                                    style="text-decoration: none;">Ver más</a>
                                 <a
                                         class="boton boton-comprar"
-                                        onclick="addToCart('{{ carta.carCodigo }}', '{{ carta.carCantidad }}')"
-                                >
+                                        onclick="addToCart('{{ carta.carCodigo }}', '{{ carta.carCantidad }}')">
                                     Comprar
                                 </a>
                             </div>
-
                         </div>
                     </li>
                 {% endfor %}
             {% else %}
                 <p class="no-products">No hay productos disponibles en este momento.</p>
             {% endif %}
+
         </ul>
     </section>
 
-    <!-- Modal para Imagen Ampliada -->
     <div id="imageModal-standfree" class="modal">
         <span id="modal-close-btn" class="close" onclick="closeModal()">&times;</span>
         <div class="modal-content-wrapper">
             <img class="modal-content" id="expandedImage-standfree"/>
         </div>
     </div>
+
+    <div class="filtro-flotante" id="filtroFlotante">
+        <div class="encabezado">
+            <h3>Filtros de Búsqueda</h3>
+            <button class="cerrar-filtro" id="btnCerrarFiltro">×</button>
+        </div>
+        <form id="formFiltro" method="GET" action=".">
+            <label for="filtroNombre">Buscar por Nombre:</label>
+            <input type="text" id="filtroNombre" name="search" placeholder="Ingresa el nombre del producto..."
+                   value="{{ search_query|default:'' }}">
+
+            <label for="precioMin">Por Rango de Precio:</label>
+            <input type="number" id="precioMin" name="precio_min" placeholder="Precio Mínimo"
+                   value="{{ precio_min|default:'' }}">
+            <input type="number" id="precioMax" name="precio_max" placeholder="Precio Máximo"
+                   value="{{ precio_max|default:'' }}">
+
+            <label>Categorías:</label>
+            <div class="categorias">
+                {% for categoria in categorias %}
+                    <input type="checkbox" id="categoria-{{ categoria.carxcatCodigo }}" name="categorias"
+                           value="{{ categoria.carxcatNombre }}"
+                           {% if categoria.carxcatNombre in categorias_seleccionadas %}checked{% endif %}/>
+                    <label for="categoria-{{ categoria.carxcatCodigo }}">{{ categoria.carxcatNombre }}</label>
+                {% endfor %}
+            </div>
+
+            <button type="submit">Buscar</button>
+        </form>
+    </div>
+
+
 
 {% endblock %}
 
@@ -257,6 +444,7 @@
             // Redirigir a la URL con el producto y la cantidad
             window.location.href = `/carrito/agregar/${cartaCodigo}/${cantidad}/carta/`;
         }
+
         // Placeholder para el botón de Ver más
         function verMas() {
             alert('Función Ver más aún no implementada');
@@ -302,6 +490,24 @@
             searchInput.addEventListener("input", updateResetButtonVisibility);
         });
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const filtroFlotante = document.getElementById('filtroFlotante');
+            const btnAbrir = document.getElementById('btnAbrir');
+            const btnCerrarFiltro = document.getElementById('btnCerrarFiltro');
+
+            // Abrir el modal de filtros
+            btnAbrir.addEventListener('click', () => {
+                filtroFlotante.classList.add('abierto');
+            });
+
+            // Cerrar el modal de filtros
+            btnCerrarFiltro.addEventListener('click', () => {
+                filtroFlotante.classList.remove('abierto');
+            });
+        });
+    </script>
+
     <script src="{% static 'webapp/js/main.js' %}"></script>
     <script src="{% static 'webapp/js/modal.js' %}"></script>
 {% endblock %}

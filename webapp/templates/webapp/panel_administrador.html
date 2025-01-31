@@ -60,6 +60,14 @@
     CSS del panel
     {% endcomment %}
     <style>
+        .action-card .bx-category {
+            color: #ff9800; /* Naranja para las categorías de carta */
+        }
+
+        .action-card .bx-library {
+            color: #4caf50; /* Verde para las categorías de libros */
+        }
+
         /* Estilo general del panel */
         .staff-panel {
             display: flex;
@@ -170,43 +178,59 @@
     </style>
 {% endblock %}
 {% block contenido_pagina %}
-<main class="staff-panel">
-    <br><br><br>
-    <!-- Texto de bienvenida -->
-    <div class="staff-header"><span>Bienvenido, {{ usuario.usuNombre }} {{ usuario.usuApellido }}</span></div>
+    <main class="staff-panel">
+        <br><br><br>
+        <!-- Texto de bienvenida -->
+        <div class="staff-header"><span>Bienvenido, {{ usuario.usuNombre }} {{ usuario.usuApellido }}</span></div>
 
-    <!-- Acciones del panel -->
-    <div class="staff-actions">
-        <!-- Administrar Stock de Carta -->
-        <div class="action-card">
-            <i class='bx bx-dish action-icon'></i>
-            <div class="action-title">Administrar Stock de Carta</div>
-            <p>Gestiona el inventario de los productos gastronómicos disponibles.</p>
-            <a href="{% url 'gestionar_cartas' %}" class="btn btn-primary">Ir a Carta</a>
+        <!-- Acciones del panel -->
+        <div class="staff-actions">
+            <!-- Administrar Stock de Carta -->
+            <div class="action-card">
+                <i class='bx bx-dish action-icon'></i>
+                <div class="action-title">Administrar Stock de Carta</div>
+                <p>Gestiona el inventario de los productos gastronómicos disponibles.</p>
+                <a href="{% url 'gestionar_cartas' %}" class="btn btn-primary">Ir a Carta</a>
+            </div>
+
+            <!-- Administrar Stock de Libros -->
+            <div class="action-card">
+                <i class='bx bx-book action-icon'></i>
+                <div class="action-title">Administrar Stock de Libros</div>
+                <p>Actualiza la disponibilidad de los libros en el catálogo.</p>
+                <a href="{% url 'gestionar_libros' %}" class="btn btn-primary">Ir a Libros</a>
+            </div>
+
+            <!-- Administrar Categorías de la Carta -->
+            <div class="action-card">
+                <i class='bx bx-category action-icon'></i>
+                <div class="action-title">Administrar Categorías de Carta</div>
+                <p>Gestiona las categorías de los productos gastronómicos disponibles.</p>
+                <a href="{% url 'gestionar_categorias_carta' %}" class="btn btn-primary">Ir a Categorías de Carta</a>
+            </div>
+
+            <!-- Administrar Categorías de Libros -->
+            <div class="action-card">
+                <i class='bx bx-library action-icon'></i>
+                <div class="action-title">Administrar Categorías de Libros</div>
+                <p>Gestiona las categorías de los libros disponibles en el catálogo.</p>
+                <a href="{% url 'gestionar_categorias_libros' %}" class="btn btn-primary">Ir a Categorías de Libros</a>
+            </div>
+
+            <!-- Evaluar Órdenes -->
+            <div class="action-card">
+                <i class='bx bx-receipt action-icon'></i>
+                <div class="action-title">Evaluar Órdenes</div>
+                <p>Revisa las órdenes de los usuarios y actualiza su estado.</p>
+                <a href="{% url 'gestionar_ordenes' %}" class="btn btn-primary">Ir a Órdenes</a>
+            </div>
         </div>
+    </main>
 
-        <!-- Administrar Stock de Libros -->
-        <div class="action-card">
-            <i class='bx bx-book action-icon'></i>
-            <div class="action-title">Administrar Stock de Libros</div>
-            <p>Actualiza la disponibilidad de los libros en el catálogo.</p>
-            <a href="{% url 'gestionar_libros' %}" class="btn btn-primary">Ir a Libros</a>
-        </div>
-
-        <!-- Evaluar Órdenes -->
-        <div class="action-card">
-            <i class='bx bx-receipt action-icon'></i>
-            <div class="action-title">Evaluar Órdenes</div>
-            <p>Revisa las órdenes de los usuarios y actualiza su estado.</p>
-            <a href="{% url 'gestionar_ordenes' %}" class="btn btn-primary">Ir a Órdenes</a>
-        </div>
-    </div>
-</main>
-
-<!-- Botón flotante de WhatsApp -->
-<a href="https://api.whatsapp.com/send?phone=+51987654321" class="btn-wsp" target="_blank">
-    <img src="{% static 'webapp/images/generales/icono_whatssap.png' %}" alt="WhatsApp">
-</a>
+    <!-- Botón flotante de WhatsApp -->
+    <a href="https://api.whatsapp.com/send?phone=+51987654321" class="btn-wsp" target="_blank">
+        <img src="{% static 'webapp/images/generales/icono_whatssap.png' %}" alt="WhatsApp">
+    </a>
 {% endblock %}
 
 {% block jvscript_archivos_defer %}

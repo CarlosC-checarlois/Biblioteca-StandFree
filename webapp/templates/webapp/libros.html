@@ -123,6 +123,161 @@
             outline: none;
         }
     </style>
+    {% comment %}
+    Stylesheet de busqueda avanzada
+    {% endcomment %}
+    <style>
+        .content {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #6f4e37; /* Marrón café */
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #a97c50; /* Marrón claro */
+        }
+
+        /* Ventana Flotante */
+        .filtro-flotante {
+            position: fixed;
+            top: 50%;
+            right: -350px;
+            transform: translateY(-50%);
+            width: 320px;
+            height: 70%; /* Limitar altura */
+            background-color: #ffffff;
+            border-left: 2px solid #d7c5ae;
+            border-radius: 10px 0 0 10px;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: right 0.3s ease-in-out;
+            overflow: hidden; /* Evitar desbordamiento inicial */
+        }
+
+        .filtro-flotante.abierto {
+            right: 0;
+        }
+
+        .filtro-flotante .encabezado {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #6f4e37; /* Marrón café */
+            border-radius: 10px 0 0 0;
+            color: #ffffff;
+        }
+
+        .filtro-flotante .encabezado h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .filtro-flotante .cerrar-filtro {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+
+        .filtro-flotante .cerrar-filtro:hover {
+            color: #f7efe5; /* Beige claro */
+            transform: scale(1.1);
+        }
+
+        .filtro-flotante form {
+            padding: 20px;
+            height: calc(100% - 50px); /* Ajustar altura sin el encabezado */
+            overflow-y: auto; /* Permitir scroll vertical */
+        }
+
+        .filtro-flotante label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #4a2c2a; /* Marrón oscuro */
+            display: block;
+        }
+
+        .filtro-flotante input,
+        .filtro-flotante button {
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #d7c5ae;
+            border-radius: 5px;
+            font-size: 14px;
+            background-color: #fefaf6; /* Beige claro */
+        }
+
+        .filtro-flotante button {
+            background-color: #6f4e37; /* Marrón café */
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+        }
+
+        .filtro-flotante button:hover {
+            background-color: #5a3c2c; /* Marrón oscuro */
+        }
+
+        .categorias {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .categorias label {
+            padding: 8px 12px;
+            background-color: #fefaf6; /* Beige claro */
+            border: 1px solid #d7c5ae;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .categorias input {
+            display: none;
+        }
+
+        .categorias input:checked + label {
+            background-color: #6f4e37; /* Marrón café */
+            color: #ffffff;
+        }
+
+        /* Botón para abrir */
+        .btn-abrir {
+            font-size: 0.9rem;
+            font-weight: bold;
+            background: rgb(155, 122, 61);
+            background: linear-gradient(90deg, rgba(155, 122, 61, 1) 0%, rgba(94, 44, 44, 1) 100%);
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s ease-in-out;
+            margin: 0 5px; /* Espaciado entre botones */
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); /* Sombra ligera */
+        }
+
+        .btn-abrir:hover {
+            background-color: #5a3c2c; /* Marrón oscuro */
+        }
+
+    </style>
+
 {% endblock %}
 {% block contenido_pagina %}
     <!-- Sección de Introducción -->
@@ -164,6 +319,7 @@
             </select>
             <button id="search-button" onclick="handleSearch()">Buscar</button>
             <button id="reset-button" onclick="handleReset()">Restablecer</button>
+            <button class="btn-abrir" id="btnAbrir">Búsqueda Avanzada</button>
         </div>
         <!-- Lista de Libros -->
         <ul class="book-list">
@@ -209,7 +365,8 @@
                             <div class="book-details">
                                 <a href="{% url 'detalle_libro' libro.libCodigo %}" class="boton"
                                    style="text-decoration: none;">Ver más</a>
-                                <a class="boton boton-comprar" onclick="addToCart('{{ libro.libCodigo }}', '{{ libro.libCantidad }}')">
+                                <a class="boton boton-comprar"
+                                   onclick="addToCart('{{ libro.libCodigo }}', '{{ libro.libCantidad }}')">
                                     Comprar
                                 </a>
                             </div>
@@ -228,6 +385,34 @@
         <div class="modal-content-wrapper">
             <img class="modal-content" id="expandedImage-standfree">
         </div>
+    </div>
+
+    <div class="filtro-flotante" id="filtroFlotante">
+        <div class="encabezado">
+            <h3>Filtros de Búsqueda</h3>
+            <button class="cerrar-filtro" id="btnCerrarFiltro">×</button>
+        </div>
+        <form id="formFiltroLibros" method="GET" action="{% url 'index_libros' %}">
+            <label for="nombre">Buscar por Nombre:</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Ingresa el nombre del libro..."
+                   value="{{ nombre }}">
+
+            <label for="precioMin">Por Rango de Precio:</label>
+            <input type="number" id="precioMin" name="precio_min" placeholder="Precio Mínimo" value="{{ precio_min }}">
+            <input type="number" id="precioMax" name="precio_max" placeholder="Precio Máximo" value="{{ precio_max }}">
+
+            <label>Categorías:</label>
+            <div class="categorias">
+                {% for categoria in categorias_disponibles %}
+                    <input type="checkbox" id="categoria{{ forloop.counter }}" name="categorias"
+                           value="{{ categoria.libxcatCodigo }}"
+                           {% if categoria.libxcatCodigo in categorias_seleccionadas %}checked{% endif %}>
+                    <label for="categoria{{ forloop.counter }}">{{ categoria.libxcatNombre }}</label>
+                {% endfor %}
+            </div>
+
+            <button type="submit">Buscar</button>
+        </form>
     </div>
 
 {% endblock %}
@@ -335,6 +520,23 @@
         });
 
 
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const filtroFlotante = document.getElementById('filtroFlotante');
+            const btnAbrir = document.getElementById('btnAbrir');
+            const btnCerrarFiltro = document.getElementById('btnCerrarFiltro');
+
+            // Abrir el modal de filtros
+            btnAbrir.addEventListener('click', () => {
+                filtroFlotante.classList.add('abierto');
+            });
+
+            // Cerrar el modal de filtros
+            btnCerrarFiltro.addEventListener('click', () => {
+                filtroFlotante.classList.remove('abierto');
+            });
+        });
     </script>
 
     <script src="{% static 'webapp/js/main.js' %}"></script>

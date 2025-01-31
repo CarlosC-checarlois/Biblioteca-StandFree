@@ -1,2 +1,6 @@
-# Excluir el archivo de configuración de entorno
+*.pyc
+*/*.pyc
+*/*/*.pyc
+
 .env
+
